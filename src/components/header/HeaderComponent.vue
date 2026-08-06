@@ -124,10 +124,13 @@ const user = {
         border: none;
         background: transparent;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         img {
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             display: block;
         }
     }
@@ -162,6 +165,83 @@ const user = {
         font-weight: 700;
         line-height: 17px;
         cursor: pointer;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 0 20px;
+        gap: 18px;
+
+        &_logo {
+            font-size: 18px;
+            line-height: 24px;
+        }
+
+        &_nav {
+            gap: 18px;
+
+            a {
+                font-size: 13px;
+            }
+        }
+
+        &_actions {
+            gap: 6px;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .header {
+        height: 44px;
+        padding: 0 12px;
+        gap: 12px;
+
+        &_logo {
+            font-size: 17px;
+        }
+
+        &_nav {
+            display: none;
+        }
+
+        &_actions {
+            gap: 4px;
+        }
+
+        &_icon {
+            width: 28px;
+            height: 28px;
+            padding: 0;    
+
+            img {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        &_account {
+            width: 28px;
+            height: 28px;
+            padding: 5px;
+
+            span {
+                display: none;
+            }
+        }
+
+        &_avatar {
+            width: 18px;
+            height: 18px;
+            margin-right: 0;
+        }
+
+        &_login {
+            padding: 6px 12px;
+            font-size: 11px;
+            line-height: 14px;
+        }
     }
 }
 </style>
