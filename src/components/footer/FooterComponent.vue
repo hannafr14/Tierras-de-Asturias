@@ -3,7 +3,7 @@
     <footer class="footer">
         <h2 class="footer_title">Tierras de Asturias</h2>
         <p class="footer_text">
-            © 2024 Tierras de Asturias. Artesanía y Tierra.
+            © 2026 Tierras de Asturias. Artesanía y Tierra.
         </p>
     </footer>
 </template>
