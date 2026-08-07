@@ -44,4 +44,17 @@ describe('HeaderComponent', () => {
         expect(wrapper.text()).toContain('Mi Cuenta');
         expect(wrapper.find('.header_avatar').exists()).toBe(true);
     })
+
+    it('changes active link back to Granjas when Granjas is clicked', async () => {
+        const wrapper = mount(HeaderComponent)
+        const links = wrapper.findAll('.header_nav a')
+        const productsLink = links.find((link) => link.text() === 'Productos')
+        const granjasLink = links.find((link) => link.text() === 'Granjas')
+
+        await productsLink.trigger('click')
+        await granjasLink.trigger('click')
+
+        expect(granjasLink.classes()).toContain('active')
+        expect(productsLink.classes()).not.toContain('active')
+    })
 })
