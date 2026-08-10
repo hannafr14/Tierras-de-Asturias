@@ -1,9 +1,7 @@
 <script setup>
-import { ref } from 'vue';
 import carritoIcon from '@/assets/carrito.svg';
 import userDefaultIcon from '@/assets/user-default.svg';
 
-const activeMenu = ref('granjas');
 const isAuth = true;
 
 const user = {
@@ -19,21 +17,13 @@ const user = {
         </a>
 
         <nav class="header_nav">
-            <a 
-                href="#"
-                :class="{ active: activeMenu === 'productos'}"
-                @click.prevent="activeMenu = 'productos'"
-            >
+            <RouterLink to="/productos">
                 Productos
-            </a>
+            </RouterLink>
 
-            <a 
-                href="#"
-                :class="{ active: activeMenu === 'granjas'}"
-                @click.prevent="activeMenu = 'granjas'"
-            >
+            <RouterLink to="/granjas">
                 Granjas
-            </a>
+            </RouterLink>
         </nav>
 
         <div class="header_actions">
@@ -101,7 +91,7 @@ const user = {
                 color: #006727;
             }
 
-            &.active {
+            &.router-link-active {
                 color: #006727;
                 font-weight: 700;
                 padding-bottom: 3px;
