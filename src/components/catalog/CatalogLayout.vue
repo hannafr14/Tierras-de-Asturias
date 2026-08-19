@@ -22,7 +22,8 @@
     background: #F9F9FF;
 
     &_content {
-        padding: 0 21px;
+        min-width: 0;
+        padding: 0 35px 0;
         overflow-y: auto;
         border-right: 1px solid #E7ECF3;
     }
@@ -38,6 +39,7 @@
         grid-template-columns: 1fr;
 
         &_content {
+            padding: 0 20px 0;
             border-right: none;
         }
 
@@ -49,12 +51,14 @@
 
 @media (max-width: 576px) {
     .catalog-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         min-height: auto;
 
         &_content {
+            min-width: 0;
             padding: 16px 12px;
             border-right: none;
+            overflow-x: hidden;
             overflow-y: visible;
         }
 
