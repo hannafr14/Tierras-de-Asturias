@@ -35,6 +35,7 @@ import searchIcon from '@/assets/search.svg'
 
 <style scoped lang="scss">
 .search-bar {
+    width: 100%;
     max-width: 270px;
     height: 36px;
     display: flex;

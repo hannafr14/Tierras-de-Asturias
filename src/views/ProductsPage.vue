@@ -3,7 +3,8 @@ import { ref } from 'vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
 import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
 import CatalogTabs from '@/components/catalog/CatalogTabs.vue';
-import SearchBar from '@/components/catalog/SearchBar.vue'
+import SearchBar from '@/components/catalog/SearchBar.vue';
+import FiltersButton from '@/components/catalog/FiltersButton.vue';
 
 const categories = ['Todos', 'Quesos', 'Sidra', 'Miel', 'Verduras', 'Carnes', 'Frutos', 'Salchichas'];
 const activeCategory = ref('Todos');
@@ -31,11 +32,17 @@ const searchQuery = ref('');
                     />
                 </div>
                 
-                <SearchBar
-                    v-model="searchQuery"
-                    placeholder="Buscar productos"
-                />
+                <div class="catalog-page_toolbar">
+                    <SearchBar
+                        v-model="searchQuery"
+                        placeholder="Buscar productos"
+                    />
+
+                    <FiltersButton />
+                </div>
             </section>
+
+
         </template>
 
         <template #map>
@@ -71,6 +78,13 @@ const searchQuery = ref('');
         margin-bottom: 22px;
         overflow: hidden;
     }
+
+    &_toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -92,6 +106,11 @@ const searchQuery = ref('');
 
         &_categories {
             margin-bottom: 16px;
+        }
+
+        &_toolbar {
+            gap: 8px;
+            margin-bottom: 18px;
         }
     }
 }
