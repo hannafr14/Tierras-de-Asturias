@@ -45,6 +45,7 @@
 
         &_map {
             min-height: 360px;
+            margin: 20px 20px 0;
         }
     }
 }

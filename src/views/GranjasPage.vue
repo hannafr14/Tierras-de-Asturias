@@ -3,9 +3,11 @@ import { ref } from 'vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
 import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
 import CatalogTabs from '@/components/catalog/CatalogTabs.vue';
+import SearchBar from '@/components/catalog/SearchBar.vue'
 
 const categories = ['Todos', 'Queserías', 'Lagares', 'Apicultura', 'Huertas'];
 const activeCategory = ref('Todos');
+const searchQuery = ref('');
 </script>
 <template>
     <CatalogLayout>
@@ -27,6 +29,11 @@ const activeCategory = ref('Todos');
                         @select="activeCategory = $event"
                     />
                 </div>
+
+                <SearchBar
+                    v-model="searchQuery"
+                    placeholder="Buscar granjas"
+                />
             </section>
         </template>
 
