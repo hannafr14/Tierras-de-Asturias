@@ -1,0 +1,173 @@
+<script setup>
+import locationIcon from '@/assets/location.svg'
+
+defineProps({
+    image: {
+        type: String,
+        required: true,
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    location: {
+        type: String,
+        required: true,
+    },
+    tags: {
+        type: Array,
+        default: () => [],
+    },
+})
+</script>
+
+<template>
+    <article class="farm-card">
+        <img
+            class="farm-card_image"
+            :src="image"
+            :alt="name"
+        >
+
+        <div class="farm-card_body">
+            <h3 class="farm-card_title">{{ name }}</h3>
+
+            <p class="farm-card_location">
+                <img
+                    class="farm-card_location-icon"
+                    :src="locationIcon"
+                    alt=""
+                >
+                {{ location }}
+            </p>
+
+            <div class="farm-card_tags">
+                <span
+                    v-for="tag in tags"
+                    :key="tag"
+                    class="farm-card_tag"
+                >
+                    {{ tag }}
+                </span>
+            </div>
+
+            <button class="farm-card_button" type="button">
+                Ver granja
+            </button>
+        </div>
+    </article>
+</template>
+
+<style scoped lang="scss">
+.farm-card {
+    width: 100%;
+    max-width: 320px;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid #BECABA;
+    border-radius: 11px;
+    background: #FFFFFF;
+    box-shadow: 0 3px 8px rgba(17, 24, 39, 0.08);
+     margin-bottom: 15px;
+
+    &_image {
+        width: 100%;
+        height: 190px;
+        display: block;
+        object-fit: cover;
+        border-radius: 7px;
+        margin: 0 auto;
+    }
+
+    &_body {
+        padding-top: 14px;
+    }
+
+    &_title {
+        color: #111827;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 25px;
+        margin: 0;
+        margin-bottom: 6px;
+    }
+
+    &_location {
+        display: flex;
+        align-items: center;
+        color: #6F7A6D;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 17px;
+        gap: 8px;
+        margin: 0;
+        margin-bottom: 6px;
+    }
+
+    &_location-icon {
+        width: 14px;
+        height: 14px;
+        flex: 0 0 auto;
+    }
+
+    &_tags {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 4px 0 11px 0;
+    }
+
+    &_tag {
+        padding: 4px 7px;
+        border-radius: 5px;
+        background: #E9EEFC;
+        color: #3F4A3E;
+        font-size: 9px;
+        font-weight: 500;
+        line-height: 13px;
+    }
+
+    &_button {
+        width: 100%;
+        height: 32px;
+        border: none;
+        border-radius: 7px;
+        background: #007A3D;
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 17px;
+        cursor: pointer;
+
+        &:hover {
+            background: #006727;
+        }
+
+        &:focus-visible {
+            outline: 2px solid rgba(0, 122, 61, 0.35);
+            outline-offset: 2px;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .farm-card {
+        max-width: none;
+        padding: 12px;
+
+        &_image {
+            width: 100%;
+            height: 210px;
+            margin: 0;
+            border-radius: 7px;
+        }
+
+        &_body {
+            padding: 12px 0 0;
+        }
+
+        &_button {
+            height: 34px;
+        }
+    }
+}
+</style>

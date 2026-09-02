@@ -5,6 +5,14 @@ import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
 import CatalogTabs from '@/components/catalog/CatalogTabs.vue';
 import SearchBar from '@/components/catalog/SearchBar.vue';
 import FiltersButton from '@/components/catalog/FiltersButton.vue';
+import FarmCard from '@/components/cards/FarmCard.vue'
+
+const farmPreview = {
+    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef',
+    name: 'Quesería del Valle',
+    location: 'Cabrales, Asturias',
+    tags: ['Quesos'],
+}
 
 const categories = ['Todos', 'Queserías', 'Lagares', 'Apicultura', 'Huertas'];
 const activeCategory = ref('Todos');
@@ -38,6 +46,15 @@ const searchQuery = ref('');
                     />
 
                     <FiltersButton />
+                </div>
+
+                <div class="catalog-page_list">
+                    <FarmCard
+                        :image="farmPreview.image"
+                        :name="farmPreview.name"
+                        :location="farmPreview.location"
+                        :tags="farmPreview.tags"
+                    />
                 </div>
             </section>
         </template>
@@ -82,6 +99,13 @@ const searchQuery = ref('');
         justify-content: space-between;
         gap: 16px;
     }
+
+    &_list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 28px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -108,6 +132,11 @@ const searchQuery = ref('');
         &_toolbar {
             gap: 8px;
             margin-bottom: 18px;
+        }
+
+        &_list {
+            grid-template-columns: 1fr;
+            gap: 16px;
         }
     }
 }
