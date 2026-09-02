@@ -5,10 +5,18 @@ import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
 import CatalogTabs from '@/components/catalog/CatalogTabs.vue';
 import SearchBar from '@/components/catalog/SearchBar.vue';
 import FiltersButton from '@/components/catalog/FiltersButton.vue';
+import ProductCard from '@/components/cards/ProductCard.vue';
 
 const categories = ['Todos', 'Quesos', 'Sidra', 'Miel', 'Verduras', 'Carnes', 'Frutos', 'Salchichas'];
 const activeCategory = ref('Todos');
 const searchQuery = ref('');
+const productPreview = {
+    image: 'https://images.unsplash.com/photo-1452195100486-9cc805987862',
+    name: 'Queso Cabrales',
+    farmName: 'Quesería del Valle',
+    location: 'Cabrales, Asturias',
+    price: '14,50€',
+}
 </script>
 
 <template>
@@ -40,9 +48,17 @@ const searchQuery = ref('');
 
                     <FiltersButton />
                 </div>
+
+                <div class="catalog-page_list">
+                    <ProductCard
+                        :image="productPreview.image"
+                        :name="productPreview.name"
+                        :farm-name="productPreview.farmName"
+                        :location="productPreview.location"
+                        :price="productPreview.price"
+                    />
+                </div>
             </section>
-
-
         </template>
 
         <template #map>
@@ -85,10 +101,21 @@ const searchQuery = ref('');
         justify-content: space-between;
         gap: 16px;
     }
+
+    &_list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 28px;
+    }
 }
 
 @media (max-width: 576px) {
     .catalog-page {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
         &_header {
             margin-bottom: 16px;
         }
@@ -111,6 +138,12 @@ const searchQuery = ref('');
         &_toolbar {
             gap: 8px;
             margin-bottom: 18px;
+        }
+
+        &_list {
+            grid-template-columns: repeat(2, minmax(0, 190px));
+            justify-content: space-between;
+            gap: 12px;
         }
     }
 }
