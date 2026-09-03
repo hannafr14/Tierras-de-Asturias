@@ -6,6 +6,7 @@ import CatalogTabs from '@/components/catalog/CatalogTabs.vue';
 import SearchBar from '@/components/catalog/SearchBar.vue';
 import FiltersButton from '@/components/catalog/FiltersButton.vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
+import MapSection from '@/components/map/MapSection.vue';
 
 const categories = ['Todos', 'Quesos', 'Sidra', 'Miel', 'Verduras', 'Carnes', 'Frutos', 'Salchichas'];
 const activeCategory = ref('Todos');
@@ -62,7 +63,7 @@ const productPreview = {
         </template>
 
         <template #map>
-            <div>Map section</div>
+            <MapSection />
         </template>
     </CatalogLayout>
 </template>

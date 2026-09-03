@@ -5,7 +5,8 @@ import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
 import CatalogTabs from '@/components/catalog/CatalogTabs.vue';
 import SearchBar from '@/components/catalog/SearchBar.vue';
 import FiltersButton from '@/components/catalog/FiltersButton.vue';
-import FarmCard from '@/components/cards/FarmCard.vue'
+import FarmCard from '@/components/cards/FarmCard.vue';
+import MapSection from '@/components/map/MapSection.vue';
 
 const farmPreview = {
     image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef',
@@ -60,7 +61,7 @@ const searchQuery = ref('');
         </template>
 
         <template #map>
-            <div>Map section</div>
+            <MapSection />
         </template>
     </CatalogLayout>
 </template>
