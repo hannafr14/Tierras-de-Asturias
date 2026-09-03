@@ -12,6 +12,10 @@ onMounted(() => {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map)
+
+    L.marker([43.3502, -4.8442])
+        .addTo(map)
+        .bindPopup('Quesería del Valle')
 })
 
 onBeforeUnmount(() => {
