@@ -1,7 +1,7 @@
 <script setup>
 import locationIcon from '@/assets/location.svg'
 
-defineProps({
+const props = defineProps({
     image: {
         type: String,
         required: true,
@@ -18,11 +18,18 @@ defineProps({
         type: Array,
         default: () => [],
     },
+    variant: {
+        type: String,
+        default: 'default',
+    },
 })
 </script>
 
 <template>
-    <article class="farm-card">
+    <article
+        class="farm-card"
+        :class="{ 'farm-card--compact': props.variant === 'compact' }"
+    >
         <img
             class="farm-card_image"
             :src="image"
@@ -68,7 +75,7 @@ defineProps({
     border-radius: 11px;
     background: #FFFFFF;
     box-shadow: 0 3px 8px rgba(17, 24, 39, 0.08);
-     margin-bottom: 15px;
+    margin-bottom: 15px;
 
     &_image {
         width: 100%;
@@ -168,6 +175,57 @@ defineProps({
         &_button {
             height: 34px;
         }
+    }
+}
+
+.farm-card--compact {
+    max-width: 130px;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 0;
+
+    .farm-card_image {
+        height: 95px;
+        border-radius: 6px;
+    }
+
+    .farm-card_body {
+        padding-top: 8px;
+    }
+
+    .farm-card_title {
+        margin-bottom: 3px;
+        font-size: 11px;
+        line-height: 15px;
+    }
+
+    .farm-card_location {
+        gap: 4px;
+        margin-bottom: 5px;
+        font-size: 9px;
+        line-height: 12px;
+    }
+
+    .farm-card_location-icon {
+        width: 10px;
+        height: 10px;
+    }
+
+    .farm-card_tags {
+        margin: 3px 0 8px;
+    }
+
+    .farm-card_tag {
+        padding: 3px 5px;
+        font-size: 7px;
+        line-height: 10px;
+    }
+
+    .farm-card_button {
+        height: 24px;
+        border-radius: 5px;
+        font-size: 9px;
+        line-height: 12px;
     }
 }
 </style>
