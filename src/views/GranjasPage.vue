@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
 import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
 import CatalogTabs from '@/components/catalog/CatalogTabs.vue';
@@ -8,16 +8,16 @@ import FiltersButton from '@/components/catalog/FiltersButton.vue';
 import FarmCard from '@/components/cards/FarmCard.vue';
 import MapSection from '@/components/map/MapSection.vue';
 
-const farmPreview = {
-    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef',
-    name: 'Quesería del Valle',
-    location: 'Cabrales, Asturias',
-    tags: ['Quesos'],
-}
-
 const categories = ['Todos', 'Queserías', 'Lagares', 'Apicultura', 'Huertas'];
 const activeCategory = ref('Todos');
 const searchQuery = ref('');
+const farms = ref([])
+
+onMounted(async () => {
+    const response = await fetch('/api/farms')
+    farms.value = await response.json()
+})
+
 </script>
 <template>
     <CatalogLayout>
@@ -51,10 +51,12 @@ const searchQuery = ref('');
 
                 <div class="catalog-page_list">
                     <FarmCard
-                        :image="farmPreview.image"
-                        :name="farmPreview.name"
-                        :location="farmPreview.location"
-                        :tags="farmPreview.tags"
+                        v-for="farm in farms"
+                        :key="farm.id"
+                        :image="farm.image"
+                        :name="farm.name"
+                        :location="farm.address"
+                        :tags="farm.categories"
                     />
                 </div>
             </section>
