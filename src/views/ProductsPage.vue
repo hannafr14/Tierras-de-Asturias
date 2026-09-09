@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
+import StateMessage from '@/components/common/StateMessage.vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
 import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
 import CatalogTabs from '@/components/catalog/CatalogTabs.vue';
@@ -11,11 +12,27 @@ import MapSection from '@/components/map/MapSection.vue';
 const categories = ['Todos', 'Quesos', 'Sidra', 'Miel', 'Verduras', 'Carnes', 'Frutos', 'Salchichas'];
 const activeCategory = ref('Todos');
 const searchQuery = ref('');
-const products = ref([])
+const products = ref([]);
+const isLoading = ref(false);
+const errorMessage = ref('');
 
 onMounted(async () => {
-    const response = await fetch('/api/products')
-    products.value = await response.json()
+    isLoading.value = true
+    errorMessage.value = ''
+
+    try {
+        const response = await fetch('/api/products')
+
+        if (!response.ok) {
+            throw new Error('Failed to load products')
+        }
+
+        products.value = await response.json()
+    } catch (error) {
+        errorMessage.value = 'No se pudieron cargar los productos.'
+    } finally {
+        isLoading.value = false
+    }
 })
 </script>
 
@@ -49,7 +66,25 @@ onMounted(async () => {
                     <FiltersButton />
                 </div>
 
-                <div class="catalog-page_list">
+                <StateMessage
+                    v-if="isLoading"
+                    type="loading"
+                    message="Cargando productos..."
+                />
+
+                <StateMessage
+                    v-else-if="errorMessage"
+                    type="error"
+                    :message="errorMessage"
+                />
+
+                <StateMessage
+                    v-else-if="products.length === 0"
+                    type="empty"
+                    message="No hay productos disponibles."
+                />
+
+                <div v-else class="catalog-page_list">
                     <ProductCard
                         v-for="product in products"
                         :key="product.id"
