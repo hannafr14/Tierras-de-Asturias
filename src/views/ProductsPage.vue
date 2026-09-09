@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
+import { getProducts } from '@/services/catalogApi';
 import StateMessage from '@/components/common/StateMessage.vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
 import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
@@ -21,13 +22,7 @@ onMounted(async () => {
     errorMessage.value = ''
 
     try {
-        const response = await fetch('/api/products')
-
-        if (!response.ok) {
-            throw new Error('Failed to load products')
-        }
-
-        products.value = await response.json()
+       products.value = await getProducts()
     } catch (error) {
         errorMessage.value = 'No se pudieron cargar los productos.'
     } finally {
