@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
 import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
 import CatalogTabs from '@/components/catalog/CatalogTabs.vue';
@@ -11,13 +11,12 @@ import MapSection from '@/components/map/MapSection.vue';
 const categories = ['Todos', 'Quesos', 'Sidra', 'Miel', 'Verduras', 'Carnes', 'Frutos', 'Salchichas'];
 const activeCategory = ref('Todos');
 const searchQuery = ref('');
-const productPreview = {
-    image: 'https://images.unsplash.com/photo-1452195100486-9cc805987862',
-    name: 'Queso Cabrales',
-    farmName: 'Quesería del Valle',
-    location: 'Cabrales, Asturias',
-    price: '14,50€',
-}
+const products = ref([])
+
+onMounted(async () => {
+    const response = await fetch('/api/products')
+    products.value = await response.json()
+})
 </script>
 
 <template>
@@ -52,11 +51,13 @@ const productPreview = {
 
                 <div class="catalog-page_list">
                     <ProductCard
-                        :image="productPreview.image"
-                        :name="productPreview.name"
-                        :farm-name="productPreview.farmName"
-                        :location="productPreview.location"
-                        :price="productPreview.price"
+                        v-for="product in products"
+                        :key="product.id"
+                        :image="product.image"
+                        :name="product.name"
+                        :farm-name="product.farmName"
+                        :location="product.farmAddress"
+                        :price="`${product.price}€`"
                     />
                 </div>
             </section>
