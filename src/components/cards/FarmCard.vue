@@ -120,6 +120,7 @@ const props = defineProps({
     &_tags {
         display: flex;
         flex-wrap: wrap;
+        gap: 6px;
         margin: 4px 0 11px 0;
     }
 

@@ -1,25 +1,68 @@
 <script setup>
-import { createApp, onBeforeUnmount, onMounted, ref } from 'vue'
+import { createApp, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import FarmCard from '@/components/cards/FarmCard.vue'
 import markerIcon from '@/assets/marker-icon-granja.svg'
 
 const mapElement = ref(null)
-let map = null
-let popupApp = null
 
-const farmPreview = {
-    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef',
-    name: 'Quesería del Valle',
-    location: 'Cabrales, Asturias',
-    tags: ['Quesos'],
-}
+const props = defineProps({
+    farms: {
+        type: Array,
+        default: () => [],
+    },
+})
+
+let map = null
+let markersLayer = null
 
 const updateMapSize = () => {
     if (map) {
         map.invalidateSize()
     }
+}
+
+const renderMarkers = () => {
+    if (!map || !markersLayer) {
+        return
+    }
+
+    markersLayer.clearLayers()
+
+    const customMarkerIcon = L.icon({
+        iconUrl: markerIcon,
+        iconSize: [46, 46],
+        iconAnchor: [23, 23],
+        popupAnchor: [0, -23],
+    })
+
+    props.farms.forEach((farm) => {
+        if (!farm.latitude || !farm.longitude) {
+            return
+        }
+
+        const popupContainer = document.createElement('div')
+        popupContainer.className = 'map-popup'
+
+        const farmPopupApp = createApp(FarmCard, {
+            image: farm.image,
+            name: farm.name,
+            location: farm.address,
+            tags: farm.categories,
+            variant: 'compact',
+        })
+
+        farmPopupApp.mount(popupContainer)
+
+        L.marker([farm.latitude, farm.longitude], {
+            icon: customMarkerIcon,
+        })
+            .addTo(markersLayer)
+            .bindPopup(popupContainer, {
+                closeButton: false,
+            })
+    })
 }
 
 onMounted(() => {
@@ -29,44 +72,27 @@ onMounted(() => {
         attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map)
 
-const popupContainer = document.createElement('div')
-popupContainer.className = 'map-popup'
+    markersLayer = L.layerGroup().addTo(map)
 
-popupApp = createApp(FarmCard, {
-    image: farmPreview.image,
-    name: farmPreview.name,
-    location: farmPreview.location,
-    tags: farmPreview.tags,
-    variant: 'compact',
-})
-
-    popupApp.mount(popupContainer)
-
-    const customMarkerIcon = L.icon({
-        iconUrl: markerIcon,
-        iconSize: [46, 46],
-        iconAnchor: [23, 23],
-        popupAnchor: [0, -23],
-    })
-
-    L.marker([43.3502, -4.8442], {
-        icon: customMarkerIcon,
-    })
-        .addTo(map)
-        .bindPopup(popupContainer, {
-            closeButton: false,
-        })
+    renderMarkers()
 
     setTimeout(updateMapSize, 0)
     window.addEventListener('resize', updateMapSize)
 })
 
+watch(
+    () => props.farms,
+    () => {
+        renderMarkers()
+    }
+)
+
 onBeforeUnmount(() => {
     window.removeEventListener('resize', updateMapSize)
 
-    if (popupApp) {
-        popupApp.unmount()
-        popupApp = null
+    if (markersLayer) {
+        markersLayer.clearLayers()
+        markersLayer = null
     }
 
     if (map) {

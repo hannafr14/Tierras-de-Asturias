@@ -93,7 +93,7 @@ onMounted(async () => {
         </template>
 
         <template #map>
-            <MapSection />
+            <MapSection :farms="farms"/>
         </template>
     </CatalogLayout>
 </template>
