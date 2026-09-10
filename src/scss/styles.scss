@@ -2,9 +2,21 @@
     box-sizing: border-box;
 }
 
+html,
+body,
+#app {
+    height: 100%;
+}
+
 body {
     margin: 0;
     font-family: 'DM Sans', Arial, sans-serif;
+    overflow: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
 }
 
 button,

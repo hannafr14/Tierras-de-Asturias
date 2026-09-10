@@ -16,20 +16,23 @@
 
 <style scoped lang="scss">
 .catalog-layout {
+    min-height: calc(100vh - 59px);
     display: grid;
     grid-template-columns: 506px 1fr;
-    min-height: calc(100vh - 59px - 94px);
     background: #F9F9FF;
+
 
     &_content {
         min-width: 0;
         padding: 0 35px 0;
-        overflow-y: auto;
         border-right: 1px solid #E7ECF3;
     }
 
     &_map {
+        position: sticky;
+        top: 0;
         min-width: 0;
+        height: calc(100vh - 59px);
         background: #DDE8DD;
     }
 }

@@ -58,6 +58,7 @@ const user = {
 <style scoped lang="scss">
 .header {
     height: 59px;
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     padding: 0 35px;
