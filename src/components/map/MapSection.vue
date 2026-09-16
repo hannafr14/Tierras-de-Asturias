@@ -12,10 +12,16 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    selectedFarmId: {
+        type: Number,
+        default: null,
+    },
 })
 
 let map = null
 let markersLayer = null
+
+const markersByFarmId = new Map()
 
 const updateMapSize = () => {
     if (map) {
@@ -29,6 +35,7 @@ const renderMarkers = () => {
     }
 
     markersLayer.clearLayers()
+    markersByFarmId.clear()
 
     const customMarkerIcon = L.icon({
         iconUrl: markerIcon,
@@ -55,14 +62,31 @@ const renderMarkers = () => {
 
         farmPopupApp.mount(popupContainer)
 
-        L.marker([farm.latitude, farm.longitude], {
+        const marker = L.marker([farm.latitude, farm.longitude], {
             icon: customMarkerIcon,
         })
             .addTo(markersLayer)
             .bindPopup(popupContainer, {
                 closeButton: false,
             })
+
+        markersByFarmId.set(farm.id, marker)
     })
+}
+
+const openSelectedFarmPopup = () => {
+    if (!props.selectedFarmId || !map) {
+        return
+    }
+
+    const marker = markersByFarmId.get(props.selectedFarmId)
+
+    if (!marker) {
+        return
+    }
+
+    marker.openPopup()
+    map.setView(marker.getLatLng(), map.getZoom())
 }
 
 onMounted(() => {
@@ -84,6 +108,14 @@ watch(
     () => props.farms,
     () => {
         renderMarkers()
+        openSelectedFarmPopup()
+    }
+)
+
+watch(
+    () => props.selectedFarmId,
+    () => {
+        openSelectedFarmPopup()
     }
 )
 

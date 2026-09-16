@@ -14,6 +14,7 @@ const categories = ['Todos', 'Queserías', 'Lagares', 'Apicultura', 'Huertas'];
 const activeCategory = ref('Todos');
 const searchQuery = ref('');
 const farms = ref([]);
+const selectedFarmId = ref(null);
 const isLoading = ref(false);
 const errorMessage = ref('');
 
@@ -87,13 +88,17 @@ onMounted(async () => {
                         :name="farm.name"
                         :location="farm.address"
                         :tags="farm.categories"
+                        @click="selectedFarmId = farm.id"
                     />
                 </div>
             </section>
         </template>
 
         <template #map>
-            <MapSection :farms="farms"/>
+            <MapSection 
+                :farms="farms"
+                :selected-farm-id="selectedFarmId"
+            />
         </template>
     </CatalogLayout>
 </template>
