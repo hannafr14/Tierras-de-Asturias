@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { getProducts } from '@/services/catalogApi';
 import StateMessage from '@/components/common/StateMessage.vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
@@ -16,6 +16,18 @@ const searchQuery = ref('');
 const products = ref([]);
 const isLoading = ref(false);
 const errorMessage = ref('');
+
+const filteredProducts = computed(() => {
+    const query = searchQuery.value.trim().toLowerCase()
+
+    if (!query) {
+        return products.value
+    }
+
+    return products.value.filter((product) => {
+        return product.name.toLowerCase().includes(query)
+    })
+})
 
 onMounted(async () => {
     isLoading.value = true
@@ -74,14 +86,14 @@ onMounted(async () => {
                 />
 
                 <StateMessage
-                    v-else-if="products.length === 0"
+                    v-else-if="filteredProducts.length === 0"
                     type="empty"
                     message="No hay productos disponibles."
                 />
 
                 <div v-else class="catalog-page_list">
                     <ProductCard
-                        v-for="product in products"
+                        v-for="product in filteredProducts"
                         :key="product.id"
                         :image="product.image"
                         :name="product.name"
