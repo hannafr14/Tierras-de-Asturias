@@ -22,12 +22,14 @@ const errorMessage = ref('');
 const filteredProducts = computed(() => {
     const query = searchQuery.value.trim().toLowerCase()
 
-    if (!query) {
-        return products.value
-    }
-
     return products.value.filter((product) => {
-        return product.name.toLowerCase().includes(query)
+        const matchesSearch = product.name.toLowerCase().includes(query)
+
+        const matchesCategory =
+            activeCategory.value === 'Todos' ||
+            product.category === activeCategory.value
+
+        return matchesSearch && matchesCategory
     })
 })
 
