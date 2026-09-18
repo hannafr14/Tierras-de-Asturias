@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import { getProducts } from '@/services/catalogApi';
+import { getFarms, getProducts } from '@/services/catalogApi';
 import StateMessage from '@/components/common/StateMessage.vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
 import CategoryFilter from '@/components/catalog/CategoryFilter.vue';
@@ -14,6 +14,8 @@ const categories = ['Todos', 'Quesos', 'Sidra', 'Miel', 'Verduras', 'Carnes', 'F
 const activeCategory = ref('Todos');
 const searchQuery = ref('');
 const products = ref([]);
+const farms = ref([]);
+const selectedFarmId = ref(null);
 const isLoading = ref(false);
 const errorMessage = ref('');
 
@@ -29,12 +31,26 @@ const filteredProducts = computed(() => {
     })
 })
 
+const selectProductFarm = (product) => {
+    const farm = farms.value.find((farm) => {
+        return farm.name === product.farmName
+    })
+
+    selectedFarmId.value = farm ? farm.id : null
+}
+
 onMounted(async () => {
     isLoading.value = true
     errorMessage.value = ''
 
     try {
-       products.value = await getProducts()
+       const [productsData, farmsData] = await Promise.all([
+            getProducts(),
+            getFarms(),
+        ])
+
+        products.value = productsData
+        farms.value = farmsData
     } catch (error) {
         errorMessage.value = 'No se pudieron cargar los productos.'
     } finally {
@@ -100,13 +116,17 @@ onMounted(async () => {
                         :farm-name="product.farmName"
                         :location="product.farmAddress"
                         :price="`${product.price}€`"
+                        @click="selectProductFarm(product)"
                     />
                 </div>
             </section>
         </template>
 
         <template #map>
-            <MapSection />
+            <MapSection 
+                :farms="farms"
+                :selected-farm-id="selectedFarmId"
+            />
         </template>
     </CatalogLayout>
 </template>
