@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { getFarms } from '@/services/catalogApi';
 import StateMessage from '@/components/common/StateMessage.vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
@@ -17,6 +17,26 @@ const farms = ref([]);
 const selectedFarmId = ref(null);
 const isLoading = ref(false);
 const errorMessage = ref('');
+
+const filteredFarms = computed(() => {
+    const query = searchQuery.value.trim().toLowerCase()
+
+    if (!query) {
+        return farms.value
+    }
+
+    return farms.value.filter((farm) => {
+        const searchableText = [
+            farm.name,
+            farm.address,
+            ...farm.categories,
+        ]
+            .join(' ')
+            .toLowerCase()
+
+        return searchableText.includes(query)
+    })
+})
 
 onMounted(async () => {
     isLoading.value = true
@@ -75,14 +95,14 @@ onMounted(async () => {
                 />
 
                 <StateMessage
-                    v-else-if="farms.length === 0"
+                    v-else-if="filteredFarms.length === 0"
                     type="empty"
                     message="No hay granjas disponibles."
                 />
 
                 <div v-else class="catalog-page_list">
                     <FarmCard
-                        v-for="farm in farms"
+                        v-for="farm in filteredFarms"
                         :key="farm.id"
                         :image="farm.image"
                         :name="farm.name"
