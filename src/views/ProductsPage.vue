@@ -9,6 +9,7 @@ import SearchBar from '@/components/catalog/SearchBar.vue';
 import FiltersButton from '@/components/catalog/FiltersButton.vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import MapSection from '@/components/map/MapSection.vue';
+import { useCartStore } from '@/stores/cartStore';
 
 const categories = ['Todos', 'Quesos', 'Sidra', 'Miel', 'Verduras', 'Carnes', 'Frutos', 'Salchichas'];
 const activeCategory = ref('Todos');
@@ -16,6 +17,7 @@ const searchQuery = ref('');
 const products = ref([]);
 const farms = ref([]);
 const selectedFarmId = ref(null);
+const cartStore = useCartStore()
 const isLoading = ref(false);
 const errorMessage = ref('');
 
@@ -115,6 +117,7 @@ onMounted(async () => {
                         :location="product.farmAddress"
                         :price="`${product.price}€`"
                         @click="selectProductFarm(product)"
+                        @add-to-cart="cartStore.addToCart(product)"
                     />
                 </div>
             </section>
