@@ -3,6 +3,8 @@ import cartIcon from '@/assets/carrito.svg'
 import fallbackImage from '@/assets/image-placeholder.svg'
 import locationIcon from '@/assets/location.svg'
 
+const emit = defineEmits(['add-to-cart'])
+
 defineProps({
     image: {
         type: String,
@@ -61,7 +63,12 @@ function handleImageError(event) {
                     {{ price }}
                 </span>
 
-                <button class="product-card_cart-button" type="button" aria-label="Add to cart">
+                <button 
+                    class="product-card_cart-button" 
+                    type="button" 
+                    aria-label="Add to cart" 
+                    @click.stop="emit('add-to-cart')"
+                >
                     <img
                         class="product-card_cart-icon"
                         :src="cartIcon"
