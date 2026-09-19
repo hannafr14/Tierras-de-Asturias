@@ -1,7 +1,9 @@
 <script setup>
 import carritoIcon from '@/assets/carrito.svg';
 import userDefaultIcon from '@/assets/user-default.svg';
+import { useCartStore } from '@/stores/cartStore';
 
+const cartStore = useCartStore()
 const isAuth = true;
 
 const user = {
@@ -29,6 +31,12 @@ const user = {
         <div class="header_actions">
             <button class="header_icon" type="button" aria-label="Carrito">
                 <img :src="carritoIcon" alt="Carrito">
+                <span
+                    v-if="cartStore.itemsCount > 0"
+                    class="header_cart-count"
+                >
+                    {{ cartStore.itemsCount }}
+                </span>
             </button>
 
             <button 
@@ -109,6 +117,7 @@ const user = {
     }
 
     &_icon {
+        position: relative;
         width: 36px;
         height: 36px;
         padding: 7px;
@@ -124,6 +133,22 @@ const user = {
             height: 18px;
             display: block;
         }
+    }
+
+    &_cart-count {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 999px;
+        background: #007A3D;
+        color: #FFFFFF;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 16px;
+        text-align: center;
     }
 
     &_account {
@@ -210,6 +235,11 @@ const user = {
                 width: 18px;
                 height: 18px;
             }
+        }
+
+        &_cart-count {
+            top: -2px;
+            right: -2px;
         }
 
         &_account {
