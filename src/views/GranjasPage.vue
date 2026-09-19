@@ -10,7 +10,7 @@ import FiltersButton from '@/components/catalog/FiltersButton.vue';
 import FarmCard from '@/components/cards/FarmCard.vue';
 import MapSection from '@/components/map/MapSection.vue';
 
-const categories = ['Todos', 'Queserías', 'Lagares', 'Apicultura', 'Huertas'];
+const categories = ['Todos', 'Quesos', 'Sidra', 'Miel', 'Verduras', 'Frutos', 'Vinos'];
 const activeCategory = ref('Todos');
 const searchQuery = ref('');
 const farms = ref([]);
@@ -21,11 +21,11 @@ const errorMessage = ref('');
 const filteredFarms = computed(() => {
     const query = searchQuery.value.trim().toLowerCase()
 
-    if (!query) {
-        return farms.value
-    }
-
     return farms.value.filter((farm) => {
+        const matchesCategory =
+            activeCategory.value === 'Todos' ||
+            farm.categories.includes(activeCategory.value)
+
         const searchableText = [
             farm.name,
             farm.address,
@@ -34,7 +34,9 @@ const filteredFarms = computed(() => {
             .join(' ')
             .toLowerCase()
 
-        return searchableText.includes(query)
+        const matchesSearch = searchableText.includes(query)
+
+        return matchesCategory && matchesSearch
     })
 })
 
