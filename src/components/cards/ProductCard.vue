@@ -1,5 +1,6 @@
 <script setup>
 import cartIcon from '@/assets/carrito.svg'
+import fallbackImage from '@/assets/image-placeholder.svg'
 import locationIcon from '@/assets/location.svg'
 
 defineProps({
@@ -24,6 +25,10 @@ defineProps({
         required: true,
     },
 })
+
+function handleImageError(event) {
+    event.target.src = fallbackImage
+}
 </script>
 
 <template>
@@ -32,6 +37,7 @@ defineProps({
             class="product-card_image"
             :src="image"
             :alt="name"
+            @error="handleImageError"
         >
 
         <div class="product-card_body">

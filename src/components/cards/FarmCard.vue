@@ -1,4 +1,5 @@
 <script setup>
+import fallbackImage from '@/assets/image-placeholder.svg'
 import locationIcon from '@/assets/location.svg'
 
 const props = defineProps({
@@ -23,6 +24,10 @@ const props = defineProps({
         default: 'default',
     },
 })
+
+function handleImageError(event) {
+    event.target.src = fallbackImage
+}
 </script>
 
 <template>
@@ -34,6 +39,7 @@ const props = defineProps({
             class="farm-card_image"
             :src="image"
             :alt="name"
+            @error="handleImageError"
         >
 
         <div class="farm-card_body">

@@ -34,11 +34,7 @@ const filteredProducts = computed(() => {
 })
 
 const selectProductFarm = (product) => {
-    const farm = farms.value.find((farm) => {
-        return farm.name === product.farmName
-    })
-
-    selectedFarmId.value = farm ? farm.id : null
+    selectedFarmId.value = product.farmId
 }
 
 onMounted(async () => {
