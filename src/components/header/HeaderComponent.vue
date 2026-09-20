@@ -29,15 +29,15 @@ const user = {
         </nav>
 
         <div class="header_actions">
-            <button class="header_icon" type="button" aria-label="Carrito">
+            <RouterLink class="header_icon" to="/cart" aria-label="Carrito">
                 <img :src="carritoIcon" alt="Carrito">
                 <span
-                    v-if="cartStore.itemsCount > 0"
+                    v-if="cartStore.items.length > 0"
                     class="header_cart-count"
                 >
-                    {{ cartStore.itemsCount }}
+                    {{ cartStore.items.length }}
                 </span>
-            </button>
+            </RouterLink>
 
             <button 
                 v-if="isAuth"               
