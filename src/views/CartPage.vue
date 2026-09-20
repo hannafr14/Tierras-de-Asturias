@@ -23,6 +23,8 @@ const cartStore = useCartStore()
                     v-for="item in cartStore.items"
                     :key="item.id"
                     :item="item"
+                    @increase="cartStore.increaseQuantity(item.id)"
+                    @decrease="cartStore.decreaseQuantity(item.id)"
                 />
             </div>
         </section>

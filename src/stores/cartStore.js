@@ -17,9 +17,7 @@ export const useCartStore = defineStore('cart', () => {
     const items = ref(getStoredCartItems())
 
     const itemsCount = computed(() => {
-        return items.value.reduce((total, item) => {
-            return total + item.quantity
-        }, 0)
+        return items.value.length
     })
 
     function saveCart() {
@@ -49,9 +47,37 @@ export const useCartStore = defineStore('cart', () => {
         saveCart()
     }
 
+    function increaseQuantity(productId) {
+        const item = items.value.find((item) => {
+            return item.id === productId
+        })
+
+        if (!item) {
+            return
+        }
+
+        item.quantity += 1
+        saveCart()
+    }
+
+    function decreaseQuantity(productId) {
+        const item = items.value.find((item) => {
+            return item.id === productId
+        })
+
+        if (!item || item.quantity === 1) {
+            return
+        }
+
+        item.quantity -= 1
+        saveCart()
+    }
+
     return {
         items,
         itemsCount,
         addToCart,
+        increaseQuantity,
+        decreaseQuantity,
     }
 })

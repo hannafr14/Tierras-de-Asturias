@@ -5,6 +5,8 @@ defineProps({
         required: true,
     },
 })
+
+const emit = defineEmits(['increase', 'decrease'])
 </script>
 <template>
         <article class="cart-item">
@@ -21,9 +23,30 @@ defineProps({
             <span class="cart-item_price">
                 {{ item.price }}€
             </span>
-            <span class="cart-item_quantity">
-                {{ item.quantity }}
-            </span>
+
+            <div class="cart-item_quantity">
+                <button
+                    class="cart-item_quantity-button"
+                    type="button"
+                    aria-label="Decrease quantity"
+                    @click="emit('decrease')"
+                >
+                    -
+                </button>
+
+                <span class="cart-item_quantity-value">
+                    {{ item.quantity }}
+                </span>
+
+                <button
+                    class="cart-item_quantity-button"
+                    type="button"
+                    aria-label="Increase quantity"
+                    @click="emit('increase')"
+                >
+                    +
+                </button>
+            </div>
         </article>
 </template>
 <style scoped lang="scss">
@@ -69,11 +92,42 @@ defineProps({
     }
 
     &_quantity {
-        min-width: 28px;
+        width: 74px;
+        height: 28px;
+        display: inline-grid;
+        grid-template-columns: 24px 1fr 24px;
+        align-items: center;
+        border: 1px solid #BECABA;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    &_quantity-button {
+        width: 24px;
+        height: 100%;
+        padding: 0;
+        border: none;
+        background: #FFFFFF;
         color: #3F4A3E;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 600;
-        line-height: 20px;
+        cursor: pointer;
+
+        &:hover {
+            background: #E9EEFC;
+        }
+
+        &:focus-visible {
+            outline: 2px solid rgba(0, 122, 61, 0.35);
+            outline-offset: -2px;
+        }
+    }
+
+    &_quantity-value {
+        color: #3F4A3E;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 28px;
         text-align: center;
     }
 }
@@ -94,7 +148,6 @@ defineProps({
 
         &_quantity {
             grid-column: 2;
-            text-align: left;
         }
     }
 }
