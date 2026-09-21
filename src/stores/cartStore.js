@@ -20,6 +20,24 @@ export const useCartStore = defineStore('cart', () => {
         return items.value.length
     })
 
+    const subtotal = computed(() => {
+        return items.value.reduce((total, item) => {
+            return total + item.price * item.quantity
+        }, 0)
+    })
+
+    const shipping = computed(() => {
+        return items.value.length === 0 ? 0 : 0
+    })
+
+    const taxes = computed(() => {
+        return subtotal.value * 0.21
+    })
+
+    const total = computed(() => {
+        return subtotal.value + shipping.value + taxes.value
+    })
+
     function saveCart() {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items.value))
     }
@@ -88,5 +106,9 @@ export const useCartStore = defineStore('cart', () => {
         increaseQuantity,
         decreaseQuantity,
         removeFromCart,
+        subtotal,
+        shipping,
+        taxes,
+        total,
     }
 })
