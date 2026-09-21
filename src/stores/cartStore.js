@@ -21,7 +21,7 @@ export const useCartStore = defineStore('cart', () => {
     })
 
     function saveCart() {
-            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items.value))
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items.value))
     }
 
     function addToCart(product) {
@@ -73,11 +73,20 @@ export const useCartStore = defineStore('cart', () => {
         saveCart()
     }
 
+    function removeFromCart(productId) {
+        items.value = items.value.filter((item) => {
+            return item.id !== productId
+        })
+
+        saveCart()
+    }
+
     return {
         items,
         itemsCount,
         addToCart,
         increaseQuantity,
         decreaseQuantity,
+        removeFromCart,
     }
 })

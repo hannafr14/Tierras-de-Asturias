@@ -25,6 +25,7 @@ const cartStore = useCartStore()
                     :item="item"
                     @increase="cartStore.increaseQuantity(item.id)"
                     @decrease="cartStore.decreaseQuantity(item.id)"
+                    @remove="cartStore.removeFromCart(item.id)"
                 />
             </div>
         </section>

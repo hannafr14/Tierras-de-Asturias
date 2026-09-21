@@ -6,7 +6,7 @@ defineProps({
     },
 })
 
-const emit = defineEmits(['increase', 'decrease'])
+const emit = defineEmits(['increase', 'decrease', 'remove'])
 </script>
 <template>
         <article class="cart-item">
@@ -47,6 +47,30 @@ const emit = defineEmits(['increase', 'decrease'])
                     +
                 </button>
             </div>
+
+            <button
+                class="cart-item_remove"
+                type="button"
+                @click="emit('remove')"
+            >
+                <svg
+                    class="cart-item_remove-icon"
+                    width="14"
+                    height="15"
+                    viewBox="0 0 14 15"
+                    fill="none"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M2.5 15C2.04167 15 1.64931 14.8368 1.32292 14.5104C0.996528 14.184 0.833333 13.7917 0.833333 13.3333V2.5H0V0.833333H4.16667V0H9.16667V0.833333H13.3333V2.5H12.5V13.3333C12.5 13.7917 12.3368 14.184 12.0104 14.5104C11.684 14.8368 11.2917 15 10.8333 15H2.5ZM10.8333 2.5H2.5V13.3333H10.8333V2.5ZM4.16667 11.6667H5.83333V4.16667H4.16667V11.6667ZM7.5 11.6667H9.16667V4.16667H7.5V11.6667Z"
+                        fill="currentColor"
+                    />
+                </svg>
+
+                <span class="cart-item_remove-text">
+                    Eliminar
+                </span>
+            </button>
         </article>
 </template>
 <style scoped lang="scss">
@@ -130,6 +154,42 @@ const emit = defineEmits(['increase', 'decrease'])
         line-height: 28px;
         text-align: center;
     }
+
+    &_remove {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: #6F7A6D;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 14px;
+        cursor: pointer;
+
+        &:hover {
+            color: #c2270c;
+        }
+
+        &:focus-visible {
+            outline: 2px solid rgba(0, 122, 61, 0.35);
+            outline-offset: 2px;
+        }
+    }
+
+    &_remove-icon {
+        width: 14px;
+        height: 15px;
+        flex: 0 0 auto;
+        display: block;
+    }
+
+    &_remove-text {
+        display: block;
+        line-height: 14px;
+        transform: translateY(1px);
+    }
 }
 
 @media (max-width: 576px) {
@@ -148,6 +208,11 @@ const emit = defineEmits(['increase', 'decrease'])
 
         &_quantity {
             grid-column: 2;
+        }
+
+        &_remove {
+            grid-column: 2;
+            justify-self: start;
         }
     }
 }
