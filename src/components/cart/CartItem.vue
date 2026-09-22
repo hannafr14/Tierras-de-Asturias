@@ -76,17 +76,22 @@ const emit = defineEmits(['increase', 'decrease', 'remove'])
 <style scoped lang="scss">
 .cart-item {
     display: grid;
-    grid-template-columns: 72px 1fr auto auto;
+    grid-template-columns: 90px minmax(0, 1fr) auto;
+    grid-template-areas:
+        "image info price"
+        "image quantity remove";
     align-items: center;
-    gap: 14px;
+    column-gap: 18px;
+    row-gap: 14px;
     padding: 14px;
     border-radius: 8px;
     background: #FFFFFF;
     box-shadow: 0 3px 8px rgba(17, 24, 39, 0.08);
 
     &_image {
-        width: 72px;
-        height: 72px;
+        grid-area: image;
+        width: 90px;
+        height: 90px;
         border-radius: 6px;
         object-fit: cover;
     }
@@ -113,6 +118,9 @@ const emit = defineEmits(['increase', 'decrease', 'remove'])
         font-weight: 500;
         line-height: 20px;
         white-space: nowrap;
+        grid-area: price;
+        align-self: start;
+        justify-self: end;
     }
 
     &_quantity {
@@ -124,6 +132,7 @@ const emit = defineEmits(['increase', 'decrease', 'remove'])
         border: 1px solid #BECABA;
         border-radius: 6px;
         overflow: hidden;
+        grid-area: quantity;
     }
 
     &_quantity-button {
@@ -166,6 +175,9 @@ const emit = defineEmits(['increase', 'decrease', 'remove'])
         font-size: 12px;
         font-weight: 500;
         line-height: 14px;
+        grid-area: remove;
+        align-self: end;
+        justify-self: end;
         cursor: pointer;
 
         &:hover {
@@ -190,11 +202,20 @@ const emit = defineEmits(['increase', 'decrease', 'remove'])
         line-height: 14px;
         transform: translateY(1px);
     }
+
+    &_info {
+        grid-area: info;
+    }
 }
 
 @media (max-width: 576px) {
     .cart-item {
         grid-template-columns: 64px 1fr;
+        grid-template-areas:
+            "image info"
+            "image price"
+            "image quantity"
+            "image remove";
         align-items: start;
 
         &_image {
@@ -203,15 +224,15 @@ const emit = defineEmits(['increase', 'decrease', 'remove'])
         }
 
         &_price {
-            grid-column: 2;
+            align-self: start;
+            justify-self: start;
         }
 
         &_quantity {
-            grid-column: 2;
+            justify-self: start;
         }
 
         &_remove {
-            grid-column: 2;
             justify-self: start;
         }
     }

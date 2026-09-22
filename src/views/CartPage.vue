@@ -1,6 +1,8 @@
 <script setup>
 import { useCartStore } from '@/stores/cartStore'
 import CartItem from '@/components/cart/CartItem.vue'
+import OrderSummary from '@/components/cart/OrderSummary.vue'
+import arrowLeftIcon from '@/assets/arrow-left.svg'
 
 const cartStore = useCartStore()
 </script>
@@ -13,26 +15,43 @@ const cartStore = useCartStore()
             </p>
         </section>
 
-        <section class="cart-page_content">
-            <p v-if="cartStore.items.length === 0" class="cart-page_empty">
-                Tu cesta está vacía.
-            </p>
+        <div class="cart-page_layout">
+            <div class="cart-page_main">
+                <section class="cart-page_content">
+                    <p v-if="cartStore.items.length === 0" class="cart-page_empty">
+                        Tu cesta está vacía.
+                    </p>
 
-            <div v-else class="cart-page_list">
-                <CartItem
-                    v-for="item in cartStore.items"
-                    :key="item.id"
-                    :item="item"
-                    @increase="cartStore.increaseQuantity(item.id)"
-                    @decrease="cartStore.decreaseQuantity(item.id)"
-                    @remove="cartStore.removeFromCart(item.id)"
-                />
+                    <div v-else class="cart-page_list">
+                        <CartItem
+                            v-for="item in cartStore.items"
+                            :key="item.id"
+                            :item="item"
+                            @increase="cartStore.increaseQuantity(item.id)"
+                            @decrease="cartStore.decreaseQuantity(item.id)"
+                            @remove="cartStore.removeFromCart(item.id)"
+                        />
+                    </div>
+                </section>
+                
+                <RouterLink class="cart-page_continue" to="/productos">
+                    <img
+                        class="cart-page_continue-icon"
+                        :src="arrowLeftIcon"
+                        alt=""
+                    >
+                    <span>Seguir Comprando</span>
+                </RouterLink>
             </div>
-        </section>
 
-        <RouterLink class="cart-page_continue" to="/productos">
-            Seguir Comprando
-        </RouterLink>
+            <OrderSummary
+                v-if="cartStore.items.length > 0"
+                :subtotal="cartStore.subtotal"
+                :shipping="cartStore.shipping"
+                :taxes="cartStore.taxes"
+                :total="cartStore.total"
+            />
+        </div>
     </main>
 </template>
 <style scoped lang="scss">
@@ -73,16 +92,44 @@ const cartStore = useCartStore()
     }
 
     &_continue {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         color: #007A3D;
         font-size: 13px;
         font-weight: 700;
         text-decoration: none;
+
+        &:hover {
+            color: #006727;
+        }
+    }
+
+    &_continue-icon {
+        width: 14px;
+        height: 14px;
+        flex: 0 0 auto;
     }
 
     &_list {
         display: flex;
         flex-direction: column;
         gap: 12px;
+    }
+
+    &_layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 24px;
+        align-items: start;
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-page {
+        &_layout {
+            grid-template-columns: 1fr;
+        }
     }
 }
 </style>

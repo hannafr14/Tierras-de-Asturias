@@ -31,11 +31,11 @@ export const useCartStore = defineStore('cart', () => {
     })
 
     const taxes = computed(() => {
-        return subtotal.value * 0.21
+        return subtotal.value - subtotal.value / 1.21
     })
 
     const total = computed(() => {
-        return subtotal.value + shipping.value + taxes.value
+        return subtotal.value + shipping.value
     })
 
     function saveCart() {
