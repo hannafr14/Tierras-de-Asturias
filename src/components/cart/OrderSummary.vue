@@ -45,9 +45,9 @@ defineProps({
             <strong>{{ total.toFixed(2) }}€</strong>
         </div>
 
-        <button class="order-summary_button" type="button">
+        <RouterLink class="order-summary_button" to="/checkout">
             Continuar al pago
-        </button>
+        </RouterLink>
     </aside>
 </template>
 <style scoped lang="scss">
@@ -109,6 +109,10 @@ defineProps({
     }
 
     &_button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
         width: 100%;
         height: 44px;
         margin-top: 24px;
