@@ -16,11 +16,41 @@ defineProps({
         type: Number,
         required: true,
     },
+    items: {
+        type: Array,
+        default: () => [],
+    },
+    buttonText: {
+        type: String,
+        default: 'Continuar al pago',
+    },
+    buttonTo: {
+        type: String,
+        default: '/checkout',
+    },
 })
 </script>
 <template>
     <aside class="order-summary">
         <h2 class="order-summary_title">Resumen del pedido</h2>
+        <div v-if="items.length > 0" class="order-summary_items">
+            <div
+                v-for="item in items"
+                :key="item.id"
+                class="order-summary_item"
+            >
+                <img
+                    class="order-summary_item-image"
+                    :src="item.image"
+                    :alt="item.name"
+                />
+
+                <div class="order-summary_item-info">
+                    <strong>{{ item.name }}</strong>
+                    <span>{{ item.quantity }} x {{ item.price.toFixed(2) }}€</span>
+                </div>
+            </div>
+        </div>
 
         <div class="order-summary_rows">
             <div class="order-summary_row">
@@ -45,9 +75,21 @@ defineProps({
             <strong>{{ total.toFixed(2) }}€</strong>
         </div>
 
-        <RouterLink class="order-summary_button" to="/checkout">
-            Continuar al pago
+        <RouterLink
+            v-if="buttonTo"
+            class="order-summary_button"
+            :to="buttonTo"
+        >
+            {{ buttonText }}
         </RouterLink>
+
+        <button
+            v-else
+            class="order-summary_button"
+            type="button"
+        >
+            {{ buttonText }}
+        </button>
     </aside>
 </template>
 <style scoped lang="scss">
@@ -64,6 +106,52 @@ defineProps({
         font-size: 18px;
         font-weight: 700;
         line-height: 24px;
+    }
+
+    &_items {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #DCE3EF;
+    }
+
+    &_item {
+        display: grid;
+        grid-template-columns: 56px minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+    }
+
+    &_item-image {
+        width: 56px;
+        height: 56px;
+        border-radius: 6px;
+        object-fit: cover;
+    }
+
+    &_item-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+
+        strong {
+            overflow: hidden;
+            color: #111827;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 18px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        span {
+            color: #3F4A3E;
+            font-size: 13px;
+            line-height: 18px;
+        }
     }
 
     &_rows {
