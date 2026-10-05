@@ -3,7 +3,7 @@ import CheckoutDeliveryForm from '@/components/checkout/CheckoutDeliveryForm.vue
 import CheckoutPaymentInfo from '@/components/checkout/CheckoutPaymentInfo.vue'
 import OrderSummary from '@/components/cart/OrderSummary.vue'
 import { useCartStore } from '@/stores/cartStore'
-import { computed, reactive, ref  } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 const deliveryForm = reactive({
     firstName: '',
@@ -29,6 +29,34 @@ const isDeliveryFormValid = computed(() => {
 
 const cartStore = useCartStore()
 
+function roundMoney(value) {
+    return Number(value.toFixed(2))
+}
+
+function createOrderPayload() {
+    return {
+        delivery: {
+            firstName: deliveryForm.firstName.trim(),
+            lastName: deliveryForm.lastName.trim(),
+            city: deliveryForm.city.trim(),
+            postalCode: deliveryForm.postalCode.trim(),
+            streetAddress: deliveryForm.streetAddress.trim(),
+            apartment: deliveryForm.apartment.trim(),
+            phone: deliveryForm.phone.trim(),
+        },
+        items: cartStore.items.map((item) => ({
+            productId: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            unitPrice: roundMoney(item.price),
+        })),
+        subtotal: roundMoney(cartStore.subtotal),
+        shipping: roundMoney(cartStore.shipping),
+        taxes: roundMoney(cartStore.taxes),
+        total: roundMoney(cartStore.total),
+    }
+}
+
 function handleCheckoutConfirm() {
     checkoutError.value = ''
 
@@ -37,11 +65,9 @@ function handleCheckoutConfirm() {
         return
     }
 
-    console.log({
-        delivery: deliveryForm,
-        items: cartStore.items,
-        total: cartStore.total,
-    })
+    const orderPayload = createOrderPayload()
+
+    console.log(orderPayload)
 }
 </script>
 
@@ -50,9 +76,11 @@ function handleCheckoutConfirm() {
         <div class="checkout-page_layout">
             <div class="checkout-page_forms">
                 <CheckoutDeliveryForm v-model="deliveryForm" />
-                    <p v-if="checkoutError" class="checkout-page_error">
-                        {{ checkoutError }}
-                    </p>
+
+                <p v-if="checkoutError" class="checkout-page_error">
+                    {{ checkoutError }}
+                </p>
+
                 <CheckoutPaymentInfo />
             </div>
 
