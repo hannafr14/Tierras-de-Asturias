@@ -3,7 +3,7 @@ import CheckoutDeliveryForm from '@/components/checkout/CheckoutDeliveryForm.vue
 import CheckoutPaymentInfo from '@/components/checkout/CheckoutPaymentInfo.vue'
 import OrderSummary from '@/components/cart/OrderSummary.vue'
 import { useCartStore } from '@/stores/cartStore'
-import { reactive } from 'vue'
+import { computed, reactive, ref  } from 'vue'
 
 const deliveryForm = reactive({
     firstName: '',
@@ -15,9 +15,28 @@ const deliveryForm = reactive({
     phone: '',
 })
 
+const checkoutError = ref('')
+const isDeliveryFormValid = computed(() => {
+    return Boolean(
+        deliveryForm.firstName.trim()
+        && deliveryForm.lastName.trim()
+        && deliveryForm.city.trim()
+        && deliveryForm.postalCode.trim()
+        && deliveryForm.streetAddress.trim()
+        && deliveryForm.phone.trim()
+    )
+})
+
 const cartStore = useCartStore()
 
 function handleCheckoutConfirm() {
+    checkoutError.value = ''
+
+    if (!isDeliveryFormValid.value) {
+        checkoutError.value = 'Completa los datos de entrega antes de continuar.'
+        return
+    }
+
     console.log({
         delivery: deliveryForm,
         items: cartStore.items,
@@ -31,6 +50,9 @@ function handleCheckoutConfirm() {
         <div class="checkout-page_layout">
             <div class="checkout-page_forms">
                 <CheckoutDeliveryForm v-model="deliveryForm" />
+                    <p v-if="checkoutError" class="checkout-page_error">
+                        {{ checkoutError }}
+                    </p>
                 <CheckoutPaymentInfo />
             </div>
 
@@ -63,6 +85,14 @@ function handleCheckoutConfirm() {
         display: flex;
         flex-direction: column;
         gap: 24px;
+    }
+
+    &_error {
+        margin: -12px 0 0;
+        color: #B42318;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
     }
 }
 
