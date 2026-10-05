@@ -1,3 +1,10 @@
+<script setup>
+const form = defineModel({
+    type: Object,
+    required: true,
+})
+</script>
+
 <template>
     <section class="checkout-delivery-form">
         <h1 class="checkout-delivery-form_title">Información de Entrega</h1>
@@ -5,39 +12,39 @@
         <form class="checkout-delivery-form_form">
             <label class="checkout-delivery-form_field">
                 <span>Nombre</span>
-                <input type="text" placeholder="Ej. Ana" />
+                <input v-model="form.firstName" type="text" placeholder="Ej. Ana" />
             </label>
 
             <label class="checkout-delivery-form_field">
                 <span>Apellidos</span>
-                <input type="text" placeholder="Ej. García López" />
+                <input v-model="form.lastName" type="text" placeholder="Ej. García López" />
             </label>
 
             <label class="checkout-delivery-form_field">
                 <span>Ciudad</span>
-                <input type="text" placeholder="Oviedo" />
+                <input v-model="form.city" type="text" placeholder="Oviedo" />
             </label>
 
             <label class="checkout-delivery-form_field">
                 <span>Código Postal</span>
-                <input type="text" placeholder="33001" />
+                <input v-model="form.postalCode" type="text" placeholder="33001" />
             </label>
 
             <div class="checkout-delivery-form_address">
                 <span class="checkout-delivery-form_address-label">Dirección de Envío</span>
 
                 <label class="checkout-delivery-form_field">
-                    <input type="text" placeholder="Calle y número" />
+                    <input v-model="form.streetAddress" type="text" placeholder="Calle y número" />
                 </label>
 
                 <label class="checkout-delivery-form_field">
-                    <input type="text" placeholder="Piso, puerta ..." />
+                    <input v-model="form.apartment" type="text" placeholder="Piso, puerta ..." />
                 </label>
             </div>
 
             <label class="checkout-delivery-form_field checkout-delivery-form_field--wide">
                 <span>Teléfono de Contacto</span>
-                <input type="tel" placeholder="+34 600 000 000" />
+                <input v-model="form.phone" type="tel" placeholder="+34 600 000 000" />
             </label>
         </form>
     </section>

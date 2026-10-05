@@ -3,6 +3,17 @@ import CheckoutDeliveryForm from '@/components/checkout/CheckoutDeliveryForm.vue
 import CheckoutPaymentInfo from '@/components/checkout/CheckoutPaymentInfo.vue'
 import OrderSummary from '@/components/cart/OrderSummary.vue'
 import { useCartStore } from '@/stores/cartStore'
+import { reactive } from 'vue'
+
+const deliveryForm = reactive({
+    firstName: '',
+    lastName: '',
+    city: '',
+    postalCode: '',
+    streetAddress: '',
+    apartment: '',
+    phone: '',
+})
 
 const cartStore = useCartStore()
 </script>
@@ -11,7 +22,7 @@ const cartStore = useCartStore()
     <main class="checkout-page">
         <div class="checkout-page_layout">
             <div class="checkout-page_forms">
-                <CheckoutDeliveryForm />
+                <CheckoutDeliveryForm v-model="deliveryForm" />
                 <CheckoutPaymentInfo />
             </div>
 
