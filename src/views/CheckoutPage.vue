@@ -16,6 +16,14 @@ const deliveryForm = reactive({
 })
 
 const cartStore = useCartStore()
+
+function handleCheckoutConfirm() {
+    console.log({
+        delivery: deliveryForm,
+        items: cartStore.items,
+        total: cartStore.total,
+    })
+}
 </script>
 
 <template>
@@ -34,6 +42,7 @@ const cartStore = useCartStore()
                 button-text="Confirmar y pagar"
                 :button-to="null"
                 :items="cartStore.items"
+                @confirm="handleCheckoutConfirm"
             />
         </div>
     </main>

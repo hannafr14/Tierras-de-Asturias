@@ -29,6 +29,8 @@ defineProps({
         default: '/checkout',
     },
 })
+
+const emit = defineEmits(['confirm'])
 </script>
 <template>
     <aside class="order-summary">
@@ -87,6 +89,7 @@ defineProps({
             v-else
             class="order-summary_button"
             type="button"
+            @click="emit('confirm')"
         >
             {{ buttonText }}
         </button>
