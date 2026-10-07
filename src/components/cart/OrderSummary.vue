@@ -28,6 +28,10 @@ defineProps({
         type: String,
         default: '/checkout',
     },
+    isLoading: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 const emit = defineEmits(['confirm'])
@@ -89,9 +93,10 @@ const emit = defineEmits(['confirm'])
             v-else
             class="order-summary_button"
             type="button"
+            :disabled="isLoading"
             @click="emit('confirm')"
         >
-            {{ buttonText }}
+            {{ isLoading ? 'Creando pedido...' : buttonText }}
         </button>
     </aside>
 </template>
@@ -223,6 +228,11 @@ const emit = defineEmits(['confirm'])
         &:focus-visible {
             outline: 2px solid rgba(0, 122, 61, 0.35);
             outline-offset: 2px;
+        }
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
     }
 }

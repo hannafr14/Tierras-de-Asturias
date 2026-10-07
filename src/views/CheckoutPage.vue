@@ -16,6 +16,7 @@ const deliveryForm = reactive({
 })
 
 const checkoutError = ref('')
+const isSubmitting = ref(false)
 const isDeliveryFormValid = computed(() => {
     return Boolean(
         deliveryForm.firstName.trim()
@@ -57,7 +58,7 @@ function createOrderPayload() {
     }
 }
 
-function handleCheckoutConfirm() {
+async function handleCheckoutConfirm() {
     checkoutError.value = ''
 
     if (!isDeliveryFormValid.value) {
@@ -67,7 +68,29 @@ function handleCheckoutConfirm() {
 
     const orderPayload = createOrderPayload()
 
-    console.log(orderPayload)
+    isSubmitting.value = true
+
+    try {
+        const response = await fetch('/api/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderPayload),
+        })
+
+        if (!response.ok) {
+            throw new Error('Order request failed')
+        }
+
+        const createdOrder = await response.json()
+
+        console.log(createdOrder)
+    } catch (error) {
+        checkoutError.value = 'No se pudo crear el pedido. Inténtalo de nuevo.'
+    } finally {
+        isSubmitting.value = false
+    }
 }
 </script>
 
@@ -92,6 +115,7 @@ function handleCheckoutConfirm() {
                 button-text="Confirmar y pagar"
                 :button-to="null"
                 :items="cartStore.items"
+                :is-loading="isSubmitting"
                 @confirm="handleCheckoutConfirm"
             />
         </div>
