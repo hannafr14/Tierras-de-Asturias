@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { getFarms, getProducts } from '@/services/catalogApi';
 import StateMessage from '@/components/common/StateMessage.vue';
 import CatalogLayout from '@/components/catalog/CatalogLayout.vue';
@@ -20,6 +20,40 @@ const selectedFarmId = ref(null);
 const cartStore = useCartStore()
 const isLoading = ref(false);
 const errorMessage = ref('');
+const catalogPageRef = ref(null)
+const showScrollActions = ref(false)
+const isNearPageBottom = ref(false)
+
+const updateScrollActionsVisibility = () => {
+    const appMain = document.querySelector('.app-main')
+
+    if (!appMain) {
+        showScrollActions.value = false
+        isNearPageBottom.value = false
+        return
+    }
+
+    const isMobile = window.innerWidth <= 576
+    const isPastFilters = appMain.scrollTop > 220
+    const distanceToBottom = appMain.scrollHeight - appMain.scrollTop - appMain.clientHeight
+
+    showScrollActions.value = isMobile && isPastFilters
+    isNearPageBottom.value = distanceToBottom < 120
+}
+
+const scrollToCatalogTop = () => {
+    catalogPageRef.value?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+    })
+}
+
+const scrollToCatalogBottom = () => {
+    catalogPageRef.value?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+    })
+}
 
 const filteredProducts = computed(() => {
     const query = searchQuery.value.trim().toLowerCase()
@@ -40,6 +74,11 @@ const selectProductFarm = (product) => {
 }
 
 onMounted(async () => {
+    updateScrollActionsVisibility()
+    document
+    .querySelector('.app-main')
+    ?.addEventListener('scroll', updateScrollActionsVisibility)
+
     isLoading.value = true
     errorMessage.value = ''
 
@@ -57,12 +96,18 @@ onMounted(async () => {
         isLoading.value = false
     }
 })
+
+onBeforeUnmount(() => {
+    document
+    .querySelector('.app-main')
+    ?.removeEventListener('scroll', updateScrollActionsVisibility)
+})
 </script>
 
 <template>
     <CatalogLayout>
         <template #content>
-            <section class="catalog-page">
+            <section ref="catalogPageRef" class="catalog-page">
                 <CatalogTabs />
                 
                 <div class="catalog-page_header">
@@ -120,6 +165,30 @@ onMounted(async () => {
                         @add-to-cart="cartStore.addToCart(product)"
                     />
                 </div>
+
+                <div
+                    v-if="filteredProducts.length > 0 && showScrollActions"
+                    class="catalog-page_scroll-actions"
+                >
+                    <button
+                        class="catalog-page_scroll-button"
+                        type="button"
+                        aria-label="Subir al inicio"
+                        @click="scrollToCatalogTop"
+                    >
+                        ↑
+                    </button>
+
+                    <button
+                        v-if="!isNearPageBottom"
+                        class="catalog-page_scroll-button"
+                        type="button"
+                        aria-label="Bajar al final"
+                        @click="scrollToCatalogBottom"
+                    >
+                        ↓
+                    </button>
+                </div>
             </section>
         </template>
 
@@ -173,6 +242,44 @@ onMounted(async () => {
         gap: 18px;
         margin-top: 28px;
     }
+    &_scroll-actions {
+        display: none;
+    }
+
+    &_scroll-button {
+        position: fixed;
+        left: 50%;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border: 1px solid rgba(190, 202, 186, 0.65);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.72);
+        color: #007A3D;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(17, 24, 39, 0.16);
+        backdrop-filter: blur(4px);
+        transform: translateX(-50%);
+        pointer-events: auto;
+
+        &:first-child {
+            top: 72px;
+        }
+
+        &:last-child {
+            bottom: 36px;
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.92);
+        }
+    }
 }
 
 @media (max-width: 576px) {
@@ -209,6 +316,25 @@ onMounted(async () => {
             grid-template-columns: repeat(2, minmax(0, 190px));
             justify-content: space-between;
             gap: 12px;
+        }
+
+        &_scroll-button {
+            width: 36px;
+            height: 36px;
+            font-size: 19px;
+
+            &:first-child {
+                top: 56px;
+            }
+
+            &:last-child {
+                bottom: 30px;
+            }
+        }
+
+        &_scroll-actions {
+            display: block;
+            pointer-events: none;
         }
     }
 }
