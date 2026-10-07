@@ -56,7 +56,7 @@
 @media (max-width: 576px) {
     .catalog-layout {
         grid-template-columns: minmax(0, 1fr);
-        min-height: auto;
+        min-height: calc(100vh - 44px - 76px);
 
         &_content {
             min-width: 0;
