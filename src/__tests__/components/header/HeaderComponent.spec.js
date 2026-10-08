@@ -1,10 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { mount } from '@vue/test-utils';
 import HeaderComponent from "@/components/header/HeaderComponent.vue";
+import { createPinia } from 'pinia';
 
 const mountHeader = () => {
     return mount(HeaderComponent, {
         global: {
+            plugins: [createPinia()],
             stubs: {
                 RouterLink: {
                     props: ['to'],
@@ -26,7 +28,7 @@ describe('HeaderComponent', () => {
 
     it('renders cart button', () => {
         const wrapper = mountHeader();
-        const cartButton = wrapper.find('button[aria-label="Carrito"]');
+        const cartButton = wrapper.find('a[aria-label="Carrito"]');
 
         expect(cartButton.exists()).toBe(true);
     })
