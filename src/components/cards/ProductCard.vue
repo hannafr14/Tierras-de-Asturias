@@ -2,8 +2,9 @@
 import cartIcon from '@/assets/carrito.svg'
 import fallbackImage from '@/assets/image-placeholder.svg'
 import locationIcon from '@/assets/location.svg'
+import QuantityControl from '@/components/common/QuantityControl.vue'
 
-const emit = defineEmits(['add-to-cart'])
+const emit = defineEmits(['add-to-cart', 'increase', 'decrease'])
 
 defineProps({
     image: {
@@ -25,6 +26,10 @@ defineProps({
     price: {
         type: String,
         required: true,
+    },
+    cartQuantity: {
+        type: Number,
+        default: 0,
     },
 })
 
@@ -64,18 +69,26 @@ function handleImageError(event) {
                 {{ price }}
             </span>
 
-            <button 
-                class="product-card_cart-button" 
-                type="button" 
-                aria-label="Add to cart" 
-                @click.stop="emit('add-to-cart')"
-            >
-                <img
-                    class="product-card_cart-icon"
-                    :src="cartIcon"
-                    alt=""
+            <div class="product-card_actions" @click.stop>
+                <QuantityControl
+                    :quantity="cartQuantity"
+                    @decrease="emit('decrease')"
+                    @increase="emit('increase')"
+                />
+
+                <button 
+                    class="product-card_cart-button" 
+                    type="button" 
+                    aria-label="Add to cart" 
+                    @click.stop="emit('add-to-cart')"
                 >
-            </button>
+                    <img
+                        class="product-card_cart-icon"
+                        :src="cartIcon"
+                        alt=""
+                    >
+                </button>
+            </div>
         </div>
     </article>
 </template>
@@ -166,6 +179,12 @@ function handleImageError(event) {
     &_cart-icon {
         width: 18px;
         height: 18px;
+    }
+
+    &_actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 }
 

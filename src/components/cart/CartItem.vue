@@ -1,4 +1,6 @@
 <script setup>
+import QuantityControl from '@/components/common/QuantityControl.vue'
+
 defineProps({
     item: {
         type: Object,
@@ -24,29 +26,12 @@ const emit = defineEmits(['increase', 'decrease', 'remove'])
                 {{ item.price }}€
             </span>
 
-            <div class="cart-item_quantity">
-                <button
-                    class="cart-item_quantity-button"
-                    type="button"
-                    aria-label="Decrease quantity"
-                    @click="emit('decrease')"
-                >
-                    -
-                </button>
-
-                <span class="cart-item_quantity-value">
-                    {{ item.quantity }}
-                </span>
-
-                <button
-                    class="cart-item_quantity-button"
-                    type="button"
-                    aria-label="Increase quantity"
-                    @click="emit('increase')"
-                >
-                    +
-                </button>
-            </div>
+            <QuantityControl
+                class="cart-item_quantity"
+                :quantity="item.quantity"
+                @decrease="emit('decrease')"
+                @increase="emit('increase')"
+            />
 
             <button
                 class="cart-item_remove"
@@ -124,44 +109,7 @@ const emit = defineEmits(['increase', 'decrease', 'remove'])
     }
 
     &_quantity {
-        width: 74px;
-        height: 28px;
-        display: inline-grid;
-        grid-template-columns: 24px 1fr 24px;
-        align-items: center;
-        border: 1px solid #BECABA;
-        border-radius: 6px;
-        overflow: hidden;
         grid-area: quantity;
-    }
-
-    &_quantity-button {
-        width: 24px;
-        height: 100%;
-        padding: 0;
-        border: none;
-        background: #FFFFFF;
-        color: #3F4A3E;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-
-        &:hover {
-            background: #E9EEFC;
-        }
-
-        &:focus-visible {
-            outline: 2px solid rgba(0, 122, 61, 0.35);
-            outline-offset: -2px;
-        }
-    }
-
-    &_quantity-value {
-        color: #3F4A3E;
-        font-size: 13px;
-        font-weight: 600;
-        line-height: 28px;
-        text-align: center;
     }
 
     &_remove {

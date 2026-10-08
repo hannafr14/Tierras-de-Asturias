@@ -17,6 +17,7 @@ const searchQuery = ref('');
 const products = ref([]);
 const farms = ref([]);
 const selectedFarmId = ref(null);
+const productQuantities = ref({})
 const cartStore = useCartStore()
 const isLoading = ref(false);
 const errorMessage = ref('');
@@ -73,7 +74,42 @@ const selectProductFarm = (product) => {
     selectedFarmId.value = product.farmId
 }
 
+const getProductQuantity = (productId) => {
+    return productQuantities.value[productId] ?? 1
+}
+
+const decreaseProductQuantity = (productId) => {
+    const quantity = getProductQuantity(productId)
+
+    if (quantity === 1) {
+        return
+    }
+
+    productQuantities.value[productId] = quantity - 1
+}
+
+const increaseProductQuantity = (productId) => {
+    const quantity = getProductQuantity(productId)
+
+    productQuantities.value[productId] = quantity + 1
+}
+
+const addProductToCart = (product) => {
+    const quantity = getProductQuantity(product.id)
+
+    for (let index = 0; index < quantity; index += 1) {
+        cartStore.addToCart(product)
+    }
+
+    productQuantities.value[product.id] = 1
+}
+
 onMounted(async () => {
+    document.querySelector('.app-main')?.scrollTo({
+        top: 0,
+        behavior: 'auto',
+    })
+
     updateScrollActionsVisibility()
     document
     .querySelector('.app-main')
@@ -161,8 +197,11 @@ onBeforeUnmount(() => {
                         :farm-name="product.farmName"
                         :location="product.farmAddress"
                         :price="`${product.price}€`"
+                        :cart-quantity="getProductQuantity(product.id)"
                         @click="selectProductFarm(product)"
-                        @add-to-cart="cartStore.addToCart(product)"
+                        @add-to-cart="addProductToCart(product)"
+                        @decrease="decreaseProductQuantity(product.id)"
+                        @increase="increaseProductQuantity(product.id)"
                     />
                 </div>
 
@@ -241,6 +280,7 @@ onBeforeUnmount(() => {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 18px;
         margin-top: 28px;
+        padding-bottom: 32px;
     }
     &_scroll-actions {
         display: none;
