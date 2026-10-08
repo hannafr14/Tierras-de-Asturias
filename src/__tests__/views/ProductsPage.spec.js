@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import ProductsPage from '@/views/ProductsPage.vue'
+import { useCartStore } from '@/stores/cartStore'
 
 vi.mock('@/services/catalogApi', () => {
     return {
@@ -13,6 +14,7 @@ vi.mock('@/services/catalogApi', () => {
 import { getProducts, getFarms } from '@/services/catalogApi'
 beforeEach(() => {
     vi.clearAllMocks()
+    localStorage.clear()
 
     getProducts.mockResolvedValue([
         {
@@ -88,5 +90,60 @@ describe('ProductsPage', () => {
 
         expect(wrapper.text()).toContain('Queso Gamoneu')
         expect(wrapper.text()).not.toContain('Sidra Natural')
+    })
+
+    it('adds a product to the cart', async () => {
+        const wrapper = mount(ProductsPage, {
+            global: {
+                plugins: [createPinia()],
+                stubs: {
+                    CatalogLayout: {
+                        template: '<div><slot name="content" /><slot name="map" /></div>',
+                    },
+                    MapSection: true,
+                },
+            },
+        })
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0)
+        })
+
+        const cartStore = useCartStore()
+        const cartButtons = wrapper.findAll('button[aria-label="Add to cart"]')
+
+        await cartButtons[0].trigger('click')
+
+        expect(cartStore.items).toHaveLength(1)
+        expect(cartStore.items[0].name).toBe('Queso Gamoneu')
+        expect(cartStore.items[0].quantity).toBe(1)
+    })
+
+    it('increases quantity when adding the same product again', async () => {
+        const wrapper = mount(ProductsPage, {
+            global: {
+                plugins: [createPinia()],
+                stubs: {
+                    CatalogLayout: {
+                        template: '<div><slot name="content" /><slot name="map" /></div>',
+                    },
+                    MapSection: true,
+                },
+            },
+        })
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0)
+        })
+
+        const cartStore = useCartStore()
+        const cartButtons = wrapper.findAll('button[aria-label="Add to cart"]')
+
+        await cartButtons[0].trigger('click')
+        await cartButtons[0].trigger('click')
+
+        expect(cartStore.items).toHaveLength(1)
+        expect(cartStore.items[0].name).toBe('Queso Gamoneu')
+        expect(cartStore.items[0].quantity).toBe(2)
     })
 })
