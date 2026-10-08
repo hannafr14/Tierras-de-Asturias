@@ -57,25 +57,25 @@ function handleImageError(event) {
                 >
                 {{ location }}
             </p>
+        </div>
 
-            <div class="product-card_footer">
-                <span class="product-card_price">
-                    {{ price }}
-                </span>
+        <div class="product-card_footer">
+            <span class="product-card_price">
+                {{ price }}
+            </span>
 
-                <button 
-                    class="product-card_cart-button" 
-                    type="button" 
-                    aria-label="Add to cart" 
-                    @click.stop="emit('add-to-cart')"
+            <button 
+                class="product-card_cart-button" 
+                type="button" 
+                aria-label="Add to cart" 
+                @click.stop="emit('add-to-cart')"
+            >
+                <img
+                    class="product-card_cart-icon"
+                    :src="cartIcon"
+                    alt=""
                 >
-                    <img
-                        class="product-card_cart-icon"
-                        :src="cartIcon"
-                        alt=""
-                    >
-                </button>
-            </div>
+            </button>
         </div>
     </article>
 </template>
@@ -90,7 +90,8 @@ function handleImageError(event) {
     border-radius: 11px;
     background: #FFFFFF;
     box-shadow: 0 3px 8px rgba(17, 24, 39, 0.08);
-    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
 
     &_image {
         width: 100%;
@@ -139,7 +140,8 @@ function handleImageError(event) {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 14px;
+        margin-top: auto;
+        padding-top: 14px;
     }
 
     &_price {
