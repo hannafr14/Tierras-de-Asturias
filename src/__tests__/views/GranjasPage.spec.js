@@ -60,4 +60,28 @@ describe('GranjasPage', () => {
         expect(wrapper.text()).toContain('Quesos')
         expect(wrapper.text()).toContain('Sidra')
     })
+
+    it('filters farms by search query', async () => {
+        const wrapper = mount(GranjasPage, {
+            global: {
+                stubs: {
+                    CatalogLayout: {
+                        template: '<div><slot name="content" /><slot name="map" /></div>',
+                    },
+                    MapSection: true,
+                },
+            },
+        })
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0)
+        })
+
+        const searchInput = wrapper.find('input[type="search"]')
+
+        await searchInput.setValue('llagar')
+
+        expect(wrapper.text()).toContain('Llagar Asturias')
+        expect(wrapper.text()).not.toContain('Finca La Vara')
+    })
 })

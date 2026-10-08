@@ -64,4 +64,29 @@ describe('ProductsPage', () => {
         expect(wrapper.text()).toContain('Finca La Vara')
         expect(wrapper.text()).toContain('Llagar Asturias')
     })
+
+    it('filters products by search query', async () => {
+        const wrapper = mount(ProductsPage, {
+            global: {
+                plugins: [createPinia()],
+                stubs: {
+                    CatalogLayout: {
+                        template: '<div><slot name="content" /><slot name="map" /></div>',
+                    },
+                    MapSection: true,
+                },
+            },
+        })
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0)
+        })
+
+        const searchInput = wrapper.find('input[type="search"]')
+
+        await searchInput.setValue('queso')
+
+        expect(wrapper.text()).toContain('Queso Gamoneu')
+        expect(wrapper.text()).not.toContain('Sidra Natural')
+    })
 })
