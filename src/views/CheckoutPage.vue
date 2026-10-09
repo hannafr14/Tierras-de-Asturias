@@ -96,7 +96,21 @@ async function handleCheckoutConfirm() {
 
 <template>
     <main class="checkout-page">
-        <div class="checkout-page_layout">
+        <section
+            v-if="cartStore.items.length === 0"
+            class="checkout-page_empty"
+        >
+            <h1 class="checkout-page_empty-title">Tu cesta está vacía.</h1>
+            <p class="checkout-page_empty-text">
+                Añade productos antes de continuar con el pago.
+            </p>
+
+            <RouterLink class="checkout-page_empty-link" to="/productos">
+                Ver productos
+            </RouterLink>
+        </section>
+
+        <div v-else class="checkout-page_layout">
             <div class="checkout-page_forms">
                 <CheckoutDeliveryForm v-model="deliveryForm" />
 
@@ -124,6 +138,7 @@ async function handleCheckoutConfirm() {
 
 <style scoped lang="scss">
 .checkout-page {
+    min-height: calc(100vh - 59px - 94px);
     padding: 32px 48px 80px;
 
     &_layout {
@@ -145,6 +160,43 @@ async function handleCheckoutConfirm() {
         font-size: 14px;
         font-weight: 600;
         line-height: 20px;
+    }
+
+    &_empty {
+        max-width: 520px;
+    }
+
+    &_empty-title {
+        margin: 0 0 8px;
+        color: #111827;
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 36px;
+    }
+
+    &_empty-text {
+        margin: 0 0 24px;
+        color: #3F4A3E;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    &_empty-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 0 18px;
+        border-radius: 7px;
+        background: #007A3D;
+        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+
+        &:hover {
+            background: #006727;
+        }
     }
 }
 
