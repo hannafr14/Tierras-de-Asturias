@@ -1,0 +1,57 @@
+import { beforeEach, describe, expect, it } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+import { useCartStore } from '@/stores/cartStore'
+
+const product = {
+    id: 1,
+    name: 'Queso Gamoneu',
+    image: 'https://example.com/queso.jpg',
+    farmName: 'Finca La Vara',
+    price: 12.5,
+}
+
+describe('cartStore', () => {
+    beforeEach(() => {
+        localStorage.clear()
+        setActivePinia(createPinia())
+    })
+
+    it('increases product quantity', () => {
+        const cartStore = useCartStore()
+
+        cartStore.addToCart(product)
+        cartStore.increaseQuantity(product.id)
+
+        expect(cartStore.items[0].quantity).toBe(2)
+    })
+
+    it('decreases product quantity', () => {
+        const cartStore = useCartStore()
+
+        cartStore.addToCart(product)
+        cartStore.increaseQuantity(product.id)
+        cartStore.decreaseQuantity(product.id)
+
+        expect(cartStore.items[0].quantity).toBe(1)
+    })
+
+    it('does not decrease product quantity below one', () => {
+        const cartStore = useCartStore()
+
+        cartStore.addToCart(product)
+        cartStore.decreaseQuantity(product.id)
+
+        expect(cartStore.items[0].quantity).toBe(1)
+    })
+
+    it('updates localStorage when product quantity changes', () => {
+        const cartStore = useCartStore()
+
+        cartStore.addToCart(product)
+        cartStore.increaseQuantity(product.id)
+
+        const storedCart = JSON.parse(localStorage.getItem('tierras-cart'))
+
+        expect(storedCart[0].quantity).toBe(2)
+    })
+})
