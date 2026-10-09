@@ -93,4 +93,74 @@ describe('CartPage', () => {
         expect(continueShoppingLink.exists()).toBe(true)
         expect(continueShoppingLink.attributes('href')).toBe('/productos')
     })
+
+    it('has a checkout link when the cart has products', () => {
+        const pinia = createPinia()
+        setActivePinia(pinia)
+
+        const cartStore = useCartStore()
+
+        cartStore.addToCart({
+            id: 1,
+            name: 'Queso Gamoneu',
+            image: 'https://example.com/queso.jpg',
+            farmName: 'Finca La Vara',
+            price: 12.5,
+        })
+
+        const wrapper = mount(CartPage, {
+            global: {
+                plugins: [pinia],
+                stubs: {
+                    RouterLink: {
+                        props: ['to'],
+                        template: '<a :href="to"><slot /></a>',
+                    },
+                },
+            },
+        })
+
+        const checkoutLink = wrapper.find('.order-summary_button')
+
+        expect(checkoutLink.exists()).toBe(true)
+        expect(checkoutLink.attributes('href')).toBe('/checkout')
+    })
+
+    it('keeps cart data available before navigating to checkout', () => {
+        const pinia = createPinia()
+        setActivePinia(pinia)
+
+        const cartStore = useCartStore()
+
+        cartStore.addToCart({
+            id: 1,
+            name: 'Queso Gamoneu',
+            image: 'https://example.com/queso.jpg',
+            farmName: 'Finca La Vara',
+            price: 12.5,
+        })
+
+        mount(CartPage, {
+            global: {
+                plugins: [pinia],
+                stubs: {
+                    RouterLink: {
+                        props: ['to'],
+                        template: '<a :href="to"><slot /></a>',
+                    },
+                },
+            },
+        })
+
+        expect(cartStore.items).toHaveLength(1)
+        expect(cartStore.items[0].name).toBe('Queso Gamoneu')
+    })
+
+    it('does not show checkout link when the cart is empty', () => {
+        const wrapper = mountCartPage()
+
+        const checkoutLink = wrapper.find('.order-summary_button')
+
+        expect(checkoutLink.exists()).toBe(false)
+    })
 })
