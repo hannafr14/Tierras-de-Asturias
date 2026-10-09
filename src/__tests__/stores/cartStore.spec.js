@@ -54,4 +54,32 @@ describe('cartStore', () => {
 
         expect(storedCart[0].quantity).toBe(2)
     })
+
+    it('removes a product from the cart', () => {
+        const cartStore = useCartStore()
+
+        cartStore.addToCart(product)
+        cartStore.addToCart({
+            id: 2,
+            name: 'Sidra Natural',
+            image: 'https://example.com/sidra.jpg',
+            farmName: 'Llagar Asturias',
+            price: 4.2,
+        })
+
+        cartStore.removeFromCart(product.id)
+
+        expect(cartStore.items).toHaveLength(1)
+        expect(cartStore.items[0].name).toBe('Sidra Natural')
+    })
+
+    it('removes the last product from the cart', () => {
+        const cartStore = useCartStore()
+
+        cartStore.addToCart(product)
+
+        cartStore.removeFromCart(product.id)
+
+        expect(cartStore.items).toHaveLength(0)
+    })
 })
