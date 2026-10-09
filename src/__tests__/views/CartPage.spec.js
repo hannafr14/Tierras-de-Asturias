@@ -14,7 +14,7 @@ const mountCartPage = () => {
             stubs: {
                 RouterLink: {
                     props: ['to'],
-                    template: '<a><slot /></a>',
+                    template: '<a :href="to"><slot /></a>',
                 },
             },
         },
@@ -83,5 +83,14 @@ describe('CartPage', () => {
         const wrapper = mountCartPage()
 
         expect(wrapper.text()).toContain('Tu cesta está vacía.')
+    })
+
+    it('has a continue shopping link to the products page', () => {
+        const wrapper = mountCartPage()
+
+        const continueShoppingLink = wrapper.find('.cart-page_continue')
+
+        expect(continueShoppingLink.exists()).toBe(true)
+        expect(continueShoppingLink.attributes('href')).toBe('/productos')
     })
 })
