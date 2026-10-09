@@ -17,6 +17,15 @@ const deliveryForm = reactive({
 
 const checkoutError = ref('')
 const isSubmitting = ref(false)
+
+const isPostalCodeValid = computed(() => {
+    return /^\d{5}$/.test(deliveryForm.postalCode.trim())
+})
+
+const isPhoneValid = computed(() => {
+    return /^\+?\d[\d\s]{8,}$/.test(deliveryForm.phone.trim())
+})
+
 const isDeliveryFormValid = computed(() => {
     return Boolean(
         deliveryForm.firstName.trim()
@@ -25,6 +34,8 @@ const isDeliveryFormValid = computed(() => {
         && deliveryForm.postalCode.trim()
         && deliveryForm.streetAddress.trim()
         && deliveryForm.phone.trim()
+        && isPostalCodeValid.value
+        && isPhoneValid.value
     )
 })
 
@@ -61,8 +72,25 @@ function createOrderPayload() {
 async function handleCheckoutConfirm() {
     checkoutError.value = ''
 
-    if (!isDeliveryFormValid.value) {
+    if (
+        !deliveryForm.firstName.trim()
+        || !deliveryForm.lastName.trim()
+        || !deliveryForm.city.trim()
+        || !deliveryForm.postalCode.trim()
+        || !deliveryForm.streetAddress.trim()
+        || !deliveryForm.phone.trim()
+    ) {
         checkoutError.value = 'Completa los datos de entrega antes de continuar.'
+        return
+    }
+
+    if (!isPostalCodeValid.value) {
+        checkoutError.value = 'Introduce un código postal válido de 5 dígitos.'
+        return
+    }
+
+    if (!isPhoneValid.value) {
+        checkoutError.value = 'Introduce un teléfono válido.'
         return
     }
 
