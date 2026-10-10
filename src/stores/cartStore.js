@@ -99,6 +99,11 @@ export const useCartStore = defineStore('cart', () => {
         saveCart()
     }
 
+    function clearCart() {
+        items.value = []
+        saveCart()
+    }
+
     return {
         items,
         itemsCount,
@@ -106,6 +111,7 @@ export const useCartStore = defineStore('cart', () => {
         increaseQuantity,
         decreaseQuantity,
         removeFromCart,
+        clearCart,
         subtotal,
         shipping,
         taxes,

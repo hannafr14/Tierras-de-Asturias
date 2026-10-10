@@ -4,6 +4,7 @@ import CheckoutPaymentInfo from '@/components/checkout/CheckoutPaymentInfo.vue'
 import OrderSummary from '@/components/cart/OrderSummary.vue'
 import { useCartStore } from '@/stores/cartStore'
 import { computed, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const deliveryForm = reactive({
     firstName: '',
@@ -40,6 +41,9 @@ const isDeliveryFormValid = computed(() => {
 })
 
 const cartStore = useCartStore()
+
+const router = useRouter()
+const LAST_ORDER_STORAGE_KEY = 'tierras-last-order'
 
 function roundMoney(value) {
     return Number(value.toFixed(2))
@@ -113,7 +117,16 @@ async function handleCheckoutConfirm() {
 
         const createdOrder = await response.json()
 
-        console.log(createdOrder)
+        sessionStorage.setItem(
+            LAST_ORDER_STORAGE_KEY,
+            JSON.stringify({
+                orderNumber: createdOrder.orderNumber,
+                date: new Date().toISOString(),
+                total: createdOrder.total,
+            })
+        )
+
+        router.push('/checkout/success')
     } catch (error) {
         checkoutError.value = 'No se pudo crear el pedido. Inténtalo de nuevo.'
     } finally {
