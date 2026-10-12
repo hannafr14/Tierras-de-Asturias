@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useCartStore } from '@/stores/cartStore'
+import OrderConfirmationSummary from '@/components/order/OrderConfirmationSummary.vue'
 
 const LAST_ORDER_STORAGE_KEY = 'tierras-last-order'
 
@@ -56,22 +57,12 @@ onMounted(() => {
                 Tu compra ayuda a mantener viva la tradición artesana.
             </p>
 
-            <div v-if="lastOrder" class="order-success-page_summary">
-                <div>
-                    <span>Nº de pedido</span>
-                    <strong>{{ lastOrder.orderNumber }}</strong>
-                </div>
-
-                <div>
-                    <span>Fecha</span>
-                    <strong>{{ formattedDate }}</strong>
-                </div>
-
-                <div>
-                    <span>Total</span>
-                    <strong>{{ formattedTotal }}</strong>
-                </div>
-            </div>
+            <OrderConfirmationSummary
+                v-if="lastOrder"
+                :order-number="lastOrder.orderNumber"
+                :date="formattedDate"
+                :total="formattedTotal"
+            />
 
             <p v-else class="order-success-page_fallback">
                 Hemos recibido tu pedido correctamente.
@@ -139,40 +130,6 @@ onMounted(() => {
         line-height: 22px;
     }
 
-    &_summary {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-        margin: 0 auto 36px;
-        padding: 20px 24px;
-        border: 1px solid #BECABA;
-        border-radius: 8px;
-        background: #FFFFFF;
-        text-align: left;
-
-        span {
-            display: block;
-            margin-bottom: 8px;
-            color: #6F7A6D;
-            font-size: 11px;
-            font-weight: 700;
-            line-height: 16px;
-            text-transform: uppercase;
-        }
-
-        strong {
-            color: #111827;
-            font-size: 15px;
-            font-weight: 700;
-            line-height: 20px;
-        }
-
-        div:last-child strong {
-            color: #007A3D;
-            font-size: 20px;
-        }
-    }
-
     &_actions {
         display: flex;
         justify-content: center;
@@ -216,11 +173,6 @@ onMounted(() => {
 @media (max-width: 576px) {
     .order-success-page {
         padding: 40px 16px 56px;
-
-        &_summary {
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
 
         &_actions {
             flex-direction: column;
