@@ -85,4 +85,13 @@ describe('OrderSuccessPage', () => {
 
         expect(cartStore.items).toHaveLength(0)
     })
+
+    it('has a continue shopping link to the products page', () => {
+        const wrapper = mountOrderSuccessPage()
+
+        const continueShoppingLink = wrapper.find('.order-success-page_primary')
+
+        expect(continueShoppingLink.exists()).toBe(true)
+        expect(continueShoppingLink.attributes('href')).toBe('/productos')
+    })
 })
