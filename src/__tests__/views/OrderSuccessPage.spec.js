@@ -1,0 +1,88 @@
+import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it } from 'vitest'
+import OrderSuccessPage from '@/views/OrderSuccessPage.vue'
+import { useCartStore } from '@/stores/cartStore'
+
+const mountOrderSuccessPage = () => {
+    const pinia = createPinia()
+    setActivePinia(pinia)
+
+    return mount(OrderSuccessPage, {
+        global: {
+            plugins: [pinia],
+            stubs: {
+                RouterLink: {
+                    props: ['to'],
+                    template: '<a :href="to"><slot /></a>',
+                },
+            },
+        },
+    })
+}
+
+describe('OrderSuccessPage', () => {
+    beforeEach(() => {
+        localStorage.clear()
+        sessionStorage.clear()
+    })
+
+    it('renders the confirmation page', () => {
+        const wrapper = mountOrderSuccessPage()
+
+        expect(wrapper.text()).toContain('Pedido confirmado')
+        expect(wrapper.text()).toContain('Gracias por apoyar a los productores locales de Asturias')
+        expect(wrapper.text()).toContain('Seguir Comprando')
+        expect(wrapper.text()).toContain('Ver Granjas')
+    })
+
+    it('renders confirmed order information from sessionStorage', async () => {
+        sessionStorage.setItem(
+            'tierras-last-order',
+            JSON.stringify({
+                orderNumber: 'ORD-123',
+                date: '2026-10-12T10:30:00',
+                total: 32.3,
+            })
+        )
+
+        const wrapper = mountOrderSuccessPage()
+
+        await nextTick()
+
+        expect(wrapper.text()).toContain('ORD-123')
+        expect(wrapper.text()).toContain('32,30')
+    })
+
+    it('clears the cart when the confirmation page opens', async () => {
+        const pinia = createPinia()
+        setActivePinia(pinia)
+
+        const cartStore = useCartStore()
+
+        cartStore.addToCart({
+            id: 1,
+            name: 'Queso Gamoneu',
+            image: 'https://example.com/queso.jpg',
+            farmName: 'Finca La Vara',
+            price: 12.5,
+        })
+
+        mount(OrderSuccessPage, {
+            global: {
+                plugins: [pinia],
+                stubs: {
+                    RouterLink: {
+                        props: ['to'],
+                        template: '<a :href="to"><slot /></a>',
+                    },
+                },
+            },
+        })
+
+        await nextTick()
+
+        expect(cartStore.items).toHaveLength(0)
+    })
+})
