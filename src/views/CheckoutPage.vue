@@ -121,7 +121,7 @@ async function handleCheckoutConfirm() {
             LAST_ORDER_STORAGE_KEY,
             JSON.stringify({
                 orderNumber: createdOrder.orderNumber,
-                date: new Date().toISOString(),
+                date: createdOrder.orderDate,
                 total: createdOrder.total,
             })
         )
