@@ -151,28 +151,34 @@ async function handleCheckoutConfirm() {
             </RouterLink>
         </section>
 
-        <div v-else class="checkout-page_layout">
-            <div class="checkout-page_forms">
-                <CheckoutDeliveryForm v-model="deliveryForm" />
+        <div v-else>
+            <RouterLink class="checkout-page_back" to="/cart">
+                ← Volver a la cesta
+            </RouterLink>
 
-                <p v-if="checkoutError" class="checkout-page_error">
-                    {{ checkoutError }}
-                </p>
+            <div class="checkout-page_layout">
+                <div class="checkout-page_forms">
+                    <CheckoutDeliveryForm v-model="deliveryForm" />
 
-                <CheckoutPaymentInfo />
+                    <p v-if="checkoutError" class="checkout-page_error">
+                        {{ checkoutError }}
+                    </p>
+
+                    <CheckoutPaymentInfo />
+                </div>
+
+                <OrderSummary
+                    :subtotal="cartStore.subtotal"
+                    :shipping="cartStore.shipping"
+                    :taxes="cartStore.taxes"
+                    :total="cartStore.total"
+                    button-text="Confirmar y pagar"
+                    :button-to="null"
+                    :items="cartStore.items"
+                    :is-loading="isSubmitting"
+                    @confirm="handleCheckoutConfirm"
+                />
             </div>
-
-            <OrderSummary
-                :subtotal="cartStore.subtotal"
-                :shipping="cartStore.shipping"
-                :taxes="cartStore.taxes"
-                :total="cartStore.total"
-                button-text="Confirmar y pagar"
-                :button-to="null"
-                :items="cartStore.items"
-                :is-loading="isSubmitting"
-                @confirm="handleCheckoutConfirm"
-            />
         </div>
     </main>
 </template>
@@ -181,6 +187,21 @@ async function handleCheckoutConfirm() {
 .checkout-page {
     min-height: calc(100vh - 59px - 94px);
     padding: 32px 48px 80px;
+
+    &_back {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 18px;
+        color: #007A3D;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 18px;
+        text-decoration: none;
+
+        &:hover {
+            color: #006727;
+        }
+    }
 
     &_layout {
         display: grid;

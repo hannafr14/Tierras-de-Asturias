@@ -172,6 +172,7 @@ onMounted(() => {
 
 @media (max-width: 576px) {
     .order-success-page {
+        min-height: calc(100vh - 44px - 76px);
         padding: 40px 16px 56px;
 
         &_actions {
