@@ -1,57 +1,213 @@
 <script setup>
+import { reactive } from 'vue';
 import AuthLayout from '@/components/auth/AuthLayout.vue';
+
+const form = reactive({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    acceptTerms: false,
+});
+
+const errors = reactive({});
+
+function validateForm() {
+    Object.keys(errors).forEach((key) => {
+        delete errors[key];
+    });
+
+    if (!form.firstName.trim()) {
+        errors.firstName = 'Introduce tu nombre.';
+    }
+
+    if (!form.lastName.trim()) {
+        errors.lastName = 'Introduce tus apellidos.';
+    }
+
+    if (!form.email.trim()) {
+        errors.email = 'Introduce tu correo electrónico.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+        errors.email = 'Introduce un correo electrónico válido.';
+    }
+
+    if (!form.password) {
+        errors.password = 'Introduce una contraseña.';
+    } else if (form.password.length < 8) {
+        errors.password = 'La contraseña debe tener al menos 8 caracteres.';
+    }
+
+    if (!form.confirmPassword) {
+        errors.confirmPassword = 'Confirma tu contraseña.';
+    } else if (form.confirmPassword !== form.password) {
+        errors.confirmPassword = 'Las contraseñas no coinciden.';
+    }
+
+    if (!form.acceptTerms) {
+        errors.acceptTerms = 'Debes aceptar los términos y la privacidad.';
+    }
+
+    return Object.keys(errors).length === 0;
+}
+
+function handleSubmit() {
+    if (!validateForm()) {
+        return;
+    }
+}
 </script>
 
 <template>
-  <AuthLayout>
-    <form class="register-form">
-      <div class="register-form__header">
-        <h2>Crea tu cuenta</h2>
-        <p>Registrate para empezar a disfrutar de lo mejor de Asturias.</p>
-      </div>
+    <AuthLayout>
+        <form
+            class="register-form"
+            novalidate
+            @submit.prevent="handleSubmit"
+        >
+            <div class="register-form__header">
+                <h2>Crea tu cuenta</h2>
+                <p>Registrate para empezar a disfrutar de lo mejor de Asturias.</p>
+            </div>
 
-      <label class="register-form__field">
-        <span>Nombre</span>
-        <input type="text" placeholder="Juan">
-      </label>
+            <label class="register-form__field">
+                <span>Nombre</span>
+                <input
+                    v-model="form.firstName"
+                    type="text"
+                    autocomplete="given-name"
+                    placeholder="Juan"
+                    required
+                    :aria-invalid="Boolean(errors.firstName)"
+                    :aria-describedby="errors.firstName ? 'first-name-error' : undefined"
+                >
+                <small
+                    v-if="errors.firstName"
+                    id="first-name-error"
+                    class="register-form__error"
+                    aria-live="polite"
+                >
+                    {{ errors.firstName }}
+                </small>
+            </label>
 
-      <label class="register-form__field">
-        <span>Apellidos</span>
-        <input type="text" placeholder="Perez">
-      </label>
+            <label class="register-form__field">
+                <span>Apellidos</span>
+                <input
+                    v-model="form.lastName"
+                    type="text"
+                    autocomplete="family-name"
+                    placeholder="Perez"
+                    required
+                    :aria-invalid="Boolean(errors.lastName)"
+                    :aria-describedby="errors.lastName ? 'last-name-error' : undefined"
+                >
+                <small
+                    v-if="errors.lastName"
+                    id="last-name-error"
+                    class="register-form__error"
+                    aria-live="polite"
+                >
+                    {{ errors.lastName }}
+                </small>
+            </label>
 
-      <label class="register-form__field">
-        <span>Correo electronico</span>
-        <input type="email" placeholder="nombre@ejemplo.com">
-      </label>
+            <label class="register-form__field">
+                <span>Correo electronico</span>
+                <input
+                    v-model="form.email"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="nombre@ejemplo.com"
+                    required
+                    :aria-invalid="Boolean(errors.email)"
+                    :aria-describedby="errors.email ? 'email-error' : undefined"
+                >
+                <small
+                    v-if="errors.email"
+                    id="email-error"
+                    class="register-form__error"
+                    aria-live="polite"
+                >
+                    {{ errors.email }}
+                </small>
+            </label>
 
-      <label class="register-form__field">
-        <span>Contrasena</span>
-        <input type="password" placeholder="********">
-      </label>
+            <label class="register-form__field">
+                <span>Contrasena</span>
+                <input
+                    v-model="form.password"
+                    type="password"
+                    autocomplete="new-password"
+                    placeholder="********"
+                    required
+                    minlength="8"
+                    :aria-invalid="Boolean(errors.password)"
+                    :aria-describedby="errors.password ? 'password-error' : undefined"
+                >
+                <small
+                    v-if="errors.password"
+                    id="password-error"
+                    class="register-form__error"
+                    aria-live="polite"
+                >
+                    {{ errors.password }}
+                </small>
+            </label>
 
-      <label class="register-form__field">
-        <span>Confirmar</span>
-        <input type="password" placeholder="********">
-      </label>
+            <label class="register-form__field">
+                <span>Confirmar</span>
+                <input
+                    v-model="form.confirmPassword"
+                    type="password"
+                    autocomplete="new-password"
+                    placeholder="********"
+                    required
+                    :aria-invalid="Boolean(errors.confirmPassword)"
+                    :aria-describedby="errors.confirmPassword ? 'confirm-password-error' : undefined"
+                >
+                <small
+                    v-if="errors.confirmPassword"
+                    id="confirm-password-error"
+                    class="register-form__error"
+                    aria-live="polite"
+                >
+                    {{ errors.confirmPassword }}
+                </small>
+            </label>
 
-      <label class="register-form__terms">
-        <input type="checkbox">
-        <span>
-          Acepto los terminos y condiciones y la politica de privacidad.
-        </span>
-      </label>
+            <label class="register-form__terms">
+                <input
+                    v-model="form.acceptTerms"
+                    type="checkbox"
+                    required
+                    :aria-invalid="Boolean(errors.acceptTerms)"
+                    :aria-describedby="errors.acceptTerms ? 'terms-error' : undefined"
+                >
+                <span>
+                    Acepto los terminos y condiciones y la politica de privacidad.
 
-      <button class="register-form__submit" type="button">
-        Crear cuenta
-      </button>
+                    <small
+                    v-if="errors.acceptTerms"
+                    id="terms-error"
+                    class="register-form__error"
+                    aria-live="polite"
+                    >
+                    {{ errors.acceptTerms }}
+                    </small>
+                </span>
+            </label>
 
-      <p class="register-form__login">
-        ¿Ya tienes cuenta?
-        <RouterLink to="/login">Iniciar sesion</RouterLink>
-      </p>
-    </form>
-  </AuthLayout>
+            <button class="register-form__submit" type="submit">
+                Crear cuenta
+            </button>
+
+            <p class="register-form__login">
+                ¿Ya tienes cuenta?
+                <RouterLink to="/login">Iniciar sesion</RouterLink>
+            </p>
+        </form>
+    </AuthLayout>
 </template>
 
 <style scoped lang="scss">
@@ -153,6 +309,13 @@ import AuthLayout from '@/components/auth/AuthLayout.vue';
             font-weight: 800;
             text-decoration: none;
         }
+    }
+
+    &__error {
+        display: block;
+        color: #d60000;
+        font-size: 12px;
+        line-height: 18px;
     }
 }
 
