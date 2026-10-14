@@ -4,6 +4,7 @@ import GranjasPage from '@/views/GranjasPage.vue';
 import CartPage from '@/views/CartPage.vue'
 import CheckoutPage from '@/views/CheckoutPage.vue';
 import OrderSuccessPage from '@/views/OrderSuccessPage.vue';
+import RegisterView from '@/views/RegisterView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
       path: '/checkout/success',
       name: 'checkout-success',
       component: OrderSuccessPage,
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
     },
   ],
 })
